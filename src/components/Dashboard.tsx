@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { 
-  LogOut, 
+import { useEffect, useState } from 'react';
+import {
+  LogOut,
   Plus,
   Briefcase,
   Mail,
@@ -11,25 +11,90 @@ import { StatsSection } from './StatsSection';
 import { ApplicationsTable } from './ApplicationsTable';
 import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
+import { RecentEmailsList } from './RecentEmailsList';
 import { mockApplications } from '../data/mockData';
 
 interface DashboardProps {
   userEmail: string;
   onLogout: () => void;
+  accessToken?: string;
 }
 
-export function Dashboard({ userEmail, onLogout }: DashboardProps) {
+interface EmailMessage {
+  id: string;
+  snippet: string;
+  subject: string;
+  from: string;
+  date: string;
+}
+
+export function Dashboard({ userEmail, onLogout, accessToken }: DashboardProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState(new Date());
+  const [emails, setEmails] = useState<EmailMessage[]>([]);
+  const [isLoadingEmails, setIsLoadingEmails] = useState(false);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchemails();
+    }
+  }, [accessToken]);
+
+  const fetchemails = async () => {
+    if (!accessToken) return;
+    setIsLoadingEmails(true);
+    setIsSyncing(true);
+
+    try {
+      const listRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=100&q=category:primary', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const listData = await listRes.json();
+
+      if (!listData.messages) {
+        setEmails([]);
+        setIsSyncing(false);
+        setIsLoadingEmails(false);
+        return;
+      }
+      const topMessages = listData.messages.slice(0, 20);
+      const messagePromises = topMessages.map(async (msg: any) => {
+        const detailRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const detailData = await detailRes.json();
+
+        const headers = detailData.payload.headers;
+        const subject = headers.find((h: any) => h.name === 'Subject')?.value || '(No Subject)';
+        const from = headers.find((h: any) => h.name === 'From')?.value || '(Unknown)';
+        const date = headers.find((h: any) => h.name === 'Date')?.value || '';
+
+        return {
+          id: msg.id,
+          snippet: detailData.snippet,
+          subject,
+          from,
+          date
+        };
+      });
+
+      const messages = await Promise.all(messagePromises);
+      setEmails(messages);
+      setLastSync(new Date());
+
+    } catch (error) {
+      console.error("Error fetching emails", error);
+    } finally {
+      setIsLoadingEmails(false);
+      setIsSyncing(false);
+    }
+  };
 
   const handleGmailSync = () => {
-    setIsSyncing(true);
-    // Simulate Gmail sync
-    setTimeout(() => {
-      setIsSyncing(false);
-      setLastSync(new Date());
-    }, 2000);
+    if (accessToken) {
+      fetchemails();
+    }
   };
 
   return (
@@ -91,13 +156,26 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
         </div>
 
         {/* Statistics Section */}
-        <StatsSection applications={mockApplications} />
+        {/* <StatsSection applications={mockApplications} /> */}
 
         {/* Charts Section */}
         <ChartsSection applications={mockApplications} />
 
-        {/* Applications Table */}
-        <ApplicationsTable applications={mockApplications} />
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Applications Table */}
+          <div className="lg:col-span-2">
+            <ApplicationsTable applications={mockApplications} />
+          </div>
+
+          {/* Recent Emails List */}
+          {/* Recent Emails List */}
+          <RecentEmailsList
+            emails={emails}
+            isLoading={isLoadingEmails}
+            onSync={handleGmailSync}
+          />
+        </div>
       </main>
 
       {/* Add Application Modal */}

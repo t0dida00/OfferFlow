@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Label } from 'recharts';
 import { Calendar } from 'lucide-react';
 
 interface Application {
@@ -153,6 +153,33 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
   const { data: chartData, label: chartLabel } = getChartData();
   const { data: pieData, label: pieLabel } = getPieChartData();
+  const total = pieData.reduce((sum, item) => sum + item.value, 0);
+  const CenterLabel = ({ viewBox }: any) => {
+    const { cx, cy } = viewBox;
+
+    return (
+      <>
+        <text
+          x={cx}
+          y={cy - 6}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="fill-gray-500 text-sm"
+        >
+          Total
+        </text>
+        <text
+          x={cx}
+          y={cy + 12}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="fill-gray-900 text-xl font-semibold"
+        >
+          {total}
+        </text>
+      </>
+    );
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -271,7 +298,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
               data={pieData}
               cx="50%"
               cy="50%"
-              innerRadius={0}
+              innerRadius={50}
               outerRadius={100}
               paddingAngle={0}
               dataKey="value"
@@ -281,6 +308,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[entry.name as keyof typeof COLORS] || '#8884d8'} />
               ))}
+              <Label content={<CenterLabel />} />
             </Pie>
             <Tooltip
               contentStyle={{
