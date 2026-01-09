@@ -4,7 +4,7 @@ import { LoginPage } from './components/LoginPage';
 import { Dashboard } from './components/Dashboard';
 import { ThemeToggle } from './components/ThemeToggle';
 
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+// const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,16 +38,16 @@ export default function App() {
   };
 
   return (
-    <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        {!isLoggedIn ? (
+    // <GoogleOAuthProvider clientId={CLIENT_ID}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      {!isLoggedIn ? (
 
-          <LoginPage onLogin={handleLogin} />
-        ) : (
-          <Dashboard userEmail={userEmail} accessToken={accessToken} onLogout={handleLogout} />
-        )}
-        <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
-      </div>
-    </GoogleOAuthProvider>
+        <LoginPage onLogin={handleLogin} />
+      ) : (
+        <Dashboard userEmail={userEmail} accessToken={accessToken} onLogout={handleLogout} />
+      )}
+      <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
+    </div>
+    // </GoogleOAuthProvider>
   );
 }

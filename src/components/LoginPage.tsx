@@ -1,43 +1,60 @@
 import { Briefcase } from 'lucide-react';
-import { useGoogleLogin } from '@react-oauth/google';
-
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const BACKEND_URL = "http://localhost:8080/api/v1/auth/google";
 interface LoginPageProps {
   onLogin: (email: string, accessToken?: string) => void;
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      const accessToken = tokenResponse.access_token;
+  // const login = useGoogleLogin({
+  //   onSuccess: async (tokenResponse) => {
+  //     console.log(tokenResponse);
+  //     const accessToken = tokenResponse.access_token;
+  //     console.log(tokenResponse)
+  //     // Fetch user email using the access token
+  //     try {
+  //       const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+  //       const userInfo = await userInfoRes.json();
 
-      // Fetch user email using the access token
-      try {
-        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const userInfo = await userInfoRes.json();
+  //       if (userInfo.email) {
+  //         onLogin(userInfo.email, accessToken);
+  //       } else {
+  //         // Fallback if email is somehow missing
+  //         onLogin('user@gmail.com', accessToken);
+  //       }
 
-        if (userInfo.email) {
-          onLogin(userInfo.email, accessToken);
-        } else {
-          // Fallback if email is somehow missing
-          onLogin('user@gmail.com', accessToken);
-        }
+  //     } catch (error) {
+  //       console.error('Failed to fetch user info', error);
+  //       onLogin('user@gmail.com', accessToken);
+  //     }
+  //   },
+  //   scope: 'https://www.googleapis.com/auth/gmail.readonly',
+  //   onError: () => {
+  //     console.error('Login Failed');
+  //   }
+  // });
+  const loginWithGoogle = () => {
+    const params = new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID,
+      redirect_uri: `${BACKEND_URL}`,
+      response_type: "code",
+      scope: [
+        "openid",
+        "email",
+        "profile",
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ].join(" "),
+      access_type: "offline",
+      prompt: "consent"
+    });
 
-      } catch (error) {
-        console.error('Failed to fetch user info', error);
-        onLogin('user@gmail.com', accessToken);
-      }
-    },
-    scope: 'https://www.googleapis.com/auth/gmail.readonly',
-    onError: () => {
-      console.error('Login Failed');
-    }
-  });
-
+    window.location.href =
+      `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
       <div className="max-w-md w-full">
@@ -56,7 +73,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
           {/* Gmail Login Button */}
           <button
-            onClick={() => login()}
+            onClick={() => loginWithGoogle()}
             className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl px-6 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 mb-6 cursor-pointer"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
