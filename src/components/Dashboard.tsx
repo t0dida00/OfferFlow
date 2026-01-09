@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   LogOut,
   Plus,
@@ -7,190 +7,35 @@ import {
   RefreshCw,
   Calendar
 } from 'lucide-react';
-import { StatsSection } from './StatsSection';
 import { ApplicationsTable } from './ApplicationsTable';
 import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
-import { RecentEmailsList } from './RecentEmailsList';
+// import { RecentEmailsList } from './RecentEmailsList';
 import { mockApplications } from '../data/mockData';
+
 
 interface DashboardProps {
   userEmail: string;
   onLogout: () => void;
-  accessToken?: string;
 }
 
-interface EmailMessage {
-  id: string;
-  snippet: string;
-  subject: string;
-  from: string;
-  date: string;
-  body: string;
-}
-
-export function Dashboard({ userEmail, onLogout, accessToken }: DashboardProps) {
+export function Dashboard({ userEmail, onLogout }: DashboardProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState(new Date());
-  const [emails, setEmails] = useState<EmailMessage[]>([]);
-  const [isLoadingEmails, setIsLoadingEmails] = useState(false);
-  const [latestEmailId, setLatestEmailId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (accessToken) {
-      fetchemails();
-    }
-  }, [accessToken]);
-
-  const fetchemails = async () => {
-    if (!accessToken) return;
-    setIsLoadingEmails(true);
+  const handleGmailSync = async () => {
     setIsSyncing(true);
     setLastSync(new Date());
-    try {
-      const listRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=10&q=category:primary', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      const listData = await listRes.json();
-
-      if (!listData.messages) {
-        if (emails.length === 0) setEmails([]);
-        setIsSyncing(false);
-        setIsLoadingEmails(false);
-        return;
-      }
-
-      let newMessagesToFetch = [];
-      const rawMessages = listData.messages;
-
-      if (latestEmailId) {
-        const lastIndex = rawMessages.findIndex((m: any) => m.id === latestEmailId);
-        if (lastIndex === -1) {
-          // If not found, fetch top 10 to be safe
-          newMessagesToFetch = rawMessages.slice(0, 10);
-        } else {
-          // Fetch everything new (before the last known id)
-          newMessagesToFetch = rawMessages.slice(0, lastIndex);
-        }
-      } else {
-        // First fetch
-        newMessagesToFetch = rawMessages.slice(0, 10);
-      }
-
-      if (newMessagesToFetch.length === 0) {
-        setIsLoadingEmails(false);
-        setIsSyncing(false);
-        return;
-      }
-      const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-      const messages: EmailMessage[] = [];
-      for (const msg of newMessagesToFetch) {
-        try {
-          const detailRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=full`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          });
-
-          if (detailRes.status === 429) {
-            // If we hit a rate limit even with sequential fetching, wait longer
-            await sleep(1000);
-            // formatting note: simplistic retry logic could be added here, but for now just skip or fail safely
-            continue;
-          }
-
-          const detailData = await detailRes.json();
-
-          const headers = detailData.payload?.headers || [];
-          const subject = headers.find((h: any) => h.name === 'Subject')?.value || '(No Subject)';
-          const from = headers.find((h: any) => h.name === 'From')?.value || '(Unknown)';
-          const date = headers.find((h: any) => h.name === 'Date')?.value || '';
-
-          // Helper to extract body
-          const getBody = (payload: any): string => {
-            let encodedBody = '';
-            if (payload.parts) {
-              const findPart = (parts: any[], mimeType: string): any => {
-                for (const part of parts) {
-                  if (part.mimeType === mimeType) return part;
-                  if (part.parts) {
-                    const found = findPart(part.parts, mimeType);
-                    if (found) return found;
-                  }
-                }
-                return null;
-              };
-              const htmlPart = findPart(payload.parts, 'text/html');
-              const textPart = findPart(payload.parts, 'text/plain');
-              const part = htmlPart || textPart;
-              if (part && part.body && part.body.data) {
-                encodedBody = part.body.data;
-              }
-            } else if (payload.body && payload.body.data) {
-              encodedBody = payload.body.data;
-            }
-
-            if (encodedBody) {
-              let decoded = '';
-              try {
-                decoded = decodeURIComponent(escape(atob(encodedBody.replace(/-/g, '+').replace(/_/g, '/'))));
-              } catch (e) {
-                decoded = atob(encodedBody.replace(/-/g, '+').replace(/_/g, '/'));
-              }
-
-              // Extract text from HTML
-              try {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(decoded, 'text/html');
-                return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
-              } catch (e) {
-                // Fallback regex strip
-                return decoded.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim();
-              }
-            }
-            return payload.snippet || '';
-          };
-
-          const body = getBody(detailData.payload);
-
-          messages.push({
-            id: msg.id,
-            snippet: detailData.snippet || '',
-            subject,
-            from,
-            date,
-            body
-          });
-
-          // Small delay between requests to be nice to the API
-          await sleep(50);
-        } catch (err) {
-          console.error(`Failed to fetch message ${msg.id}`, err);
-        }
-      }
-
-      if (messages.length > 0) {
-        setEmails(prev => {
-          const updated = [...messages, ...prev];
-          return updated.slice(0, 100);
-        });
-        setLatestEmailId(messages[0].id);
-
-      }
-
-    } catch (error) {
-      console.error("Error fetching emails", error);
-    } finally {
-      setIsLoadingEmails(false);
+    // Placeholder for backend sync logic
+    // e.g., await fetch('/api/v1/sync', { method: 'POST', headers: { ... } });
+    setTimeout(() => {
       setIsSyncing(false);
-    }
+    }, 2000);
   };
 
-  const handleGmailSync = () => {
-    if (accessToken) {
-      fetchemails();
-    }
-  };
+
+  // Email fetching logic removed as it is now handled by backend
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -259,17 +104,17 @@ export function Dashboard({ userEmail, onLogout, accessToken }: DashboardProps) 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Applications Table */}
-          <div className="lg:col-span-2 ">
+          <div className="lg:col-span-3">
+            {/* Expanded col-span to 3 since email list is gone/hidden */}
             <ApplicationsTable applications={mockApplications} />
           </div>
 
-          {/* Recent Emails List */}
-          {/* Recent Emails List */}
-          <RecentEmailsList
-            emails={emails}
-            isLoading={isLoadingEmails}
-            onSync={handleGmailSync}
-          />
+          {/* Recent Emails List - Removed for now */}
+          {/* <RecentEmailsList
+            emails={[]}
+            isLoading={false}
+            onSync={() => {}}
+          /> */}
         </div>
       </main>
 

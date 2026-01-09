@@ -1,11 +1,8 @@
 import { Briefcase } from 'lucide-react';
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const BACKEND_URL = "http://localhost:8080/api/v1/auth/google";
-interface LoginPageProps {
-  onLogin: (email: string, accessToken?: string) => void;
-}
 
-export function LoginPage({ onLogin }: LoginPageProps) {
+export function LoginPage() {
   // const login = useGoogleLogin({
   //   onSuccess: async (tokenResponse) => {
   //     console.log(tokenResponse);
