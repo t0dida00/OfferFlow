@@ -6,6 +6,7 @@ interface EmailMessage {
     subject: string;
     from: string;
     date: string;
+    body?: string;
 }
 
 interface RecentEmailsListProps {
@@ -15,6 +16,7 @@ interface RecentEmailsListProps {
 }
 
 export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsListProps) {
+    console.log(emails);
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col h-[600px]">
             <div className="p-6 border-b border-gray-100 dark:border-gray-700">
@@ -22,7 +24,7 @@ export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsList
                     <Mail className="w-5 h-5 text-gray-400" />
                     Recent Related Emails
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Last 100 emails (showing top 20)</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Last 20 emails</p>
             </div>
 
             <div className="flex-1 overflow-y-auto p-0">
@@ -33,7 +35,11 @@ export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsList
                 ) : emails.length > 0 ? (
                     <div className="divide-y divide-gray-100 dark:divide-gray-700">
                         {emails.map(email => (
-                            <div key={email.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group">
+                            <div
+                                key={email.id}
+                                className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group"
+                                onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${email.id}`, '_blank')}
+                            >
                                 <div className="flex justify-between items-start mb-1">
                                     <span className="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-[180px]" title={email.from}>
                                         {email.from.replace(/<.*>/, '').trim()}
