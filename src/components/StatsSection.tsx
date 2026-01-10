@@ -2,12 +2,12 @@ import { FileText, Send, Video, Award, TrendingUp } from 'lucide-react';
 import { StatsCard } from './StatsCard';
 
 interface Application {
-  id: string;
+  _id: string;
   company: string;
   role: string;
   location: string;
-  dateApplied: string;
-  result: string;
+  date: string;
+  status: string;
 }
 
 interface StatsSectionProps {
@@ -16,10 +16,10 @@ interface StatsSectionProps {
 
 export function StatsSection({ applications }: StatsSectionProps) {
   const totalApplications = applications.length;
-  const interviews = applications.filter(app => app.result === 'Interview').length;
-  const offers = applications.filter(app => app.result === 'Offer').length;
-  const pending = applications.filter(app => app.result === 'Pending').length;
-  const rejected = applications.filter(app => app.result === 'Rejected').length;
+  const interviews = applications.filter(app => app.status === 'Interview').length;
+  const offers = applications.filter(app => app.status === 'Offer').length;
+  const applied = applications.filter(app => app.status === 'Applied').length;
+  const rejected = applications.filter(app => app.status === 'Rejected').length;
 
   // Calculate response rate
   const responseRate = totalApplications > 0
@@ -34,8 +34,8 @@ export function StatsSection({ applications }: StatsSectionProps) {
       color: 'blue' as const,
     },
     {
-      label: 'Pending',
-      value: pending,
+      label: 'Applied',
+      value: applied,
       icon: Send,
       color: 'gray' as const,
     },

@@ -11,7 +11,7 @@ interface ChartsSectionProps {
 type TimeRange = 'annually' | 'all';
 
 const COLORS = {
-  'Pending': '#9ca3af', // Gray
+  'Applied': '#9ca3af', // Gray
   'Interview': '#eab308', // Yellow
   'Offer': '#22c55e', // Green
   'Rejected': '#ef4444', // Red
@@ -115,21 +115,26 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
     }
 
     const stats = {
-      'Pending': 0,
+      'Applied': 0,
       'Interview': 0,
       'Offer': 0,
       'Rejected': 0,
     };
 
     filteredApps.forEach(app => {
-      // Map 'Applied' or other statuses to 'Pending' if needed, or handle as is.
-      // Assuming 'Applied' counts as Pending or key exists.
-      // If 'result' matches keys exactly:
-      if (stats.hasOwnProperty(app.status)) {
-        stats[app.status as keyof typeof stats]++;
+      // Normalize status to match keys
+      // Assumes app.status or app.result matches keys exactly or needs mapping
+      // If db has 'Applied' instead of 'Pending':
+      const status = app.status; // Assuming app.status is the correct field
+
+      if (status && status in stats) {
+        // @ts-ignore
+        stats[status]++;
       } else {
-        // Fallback for unknown status, typically count as Pending
-        stats['Pending']++;
+        // Fallback or count as Applied?
+        // If an unknown status is encountered, it will not be counted.
+        // If you want to count unknown statuses as 'Applied', uncomment the line below:
+        // stats['Applied']++;
       }
     });
 

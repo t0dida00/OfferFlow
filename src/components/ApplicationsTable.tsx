@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Application } from '../types';
+import { ApplicationDetailsModal } from './ApplicationDetailsModal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+// We'll need access to api.ts functions, but maybe better to prompt user or just pass dummy onSave for now if api update not ready?
+// Or we can define it here or import it. The plan says add updateApplication to api.ts next.
+// I'll import updateApplication, assuming I'll add it in the next step.
+import { updateApplication } from '../services/api';
 
 interface ApplicationsTableProps {
   applications: Application[];
 }
 
 const resultStyles: Record<string, { bg: string; text: string; dot: string }> = {
-  Pending: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
+  Applied: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
   Interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
   Offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
   Rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
@@ -21,6 +27,19 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const queryClient = useQueryClient();
+
+  const { mutate: handleUpdateApp } = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Application> }) => updateApplication(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+      setSelectedApp(null);
+    },
+    onError: (error) => {
+      console.error("Failed to update application", error);
+    }
+  });
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -46,11 +65,14 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
       return matchesSearch && matchesFilter;
     })
     .sort((a, b) => {
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+
       let comparison = 0;
       if (sortField === 'date') {
-        comparison = new Date(a[sortField]).getTime() - new Date(b[sortField]).getTime();
-      } else {
-        comparison = a[sortField].localeCompare(b[sortField]);
+        comparison = new Date(aValue as string).getTime() - new Date(bValue as string).getTime();
+      } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+        comparison = aValue.localeCompare(bValue);
       }
       return sortDirection === 'asc' ? comparison : -comparison;
     });
@@ -90,7 +112,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               className="pl-10 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white cursor-pointer min-w-[150px]"
             >
               <option value="all">All Results</option>
-              <option value="Pending">Pending</option>
+              <option value="Applied">Applied</option>
               <option value="Interview">Interview</option>
               <option value="Offer">Offer</option>
               <option value="Rejected">Rejected</option>
@@ -106,7 +128,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
             <tr>
               <th className="px-6 py-3 text-left">
                 <button
-                  onClick={() => handleSort('id')}
+                  onClick={() => handleSort('_id')}
                   className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   ID
@@ -169,11 +191,15 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               </tr>
             ) : (
               paginatedApplications.map((app) => {
-                const style = resultStyles[app.status] || resultStyles.Pending;
+                const style = resultStyles[app.status] || resultStyles.Applied;
                 return (
-                  <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <tr
+                    key={app._id}
+                    onClick={() => setSelectedApp(app)}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                      #{app.id}
+                      #{app._id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">{app.company}</div>
@@ -240,6 +266,14 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
           </button>
         </div>
       </div>
+
+      {selectedApp && (
+        <ApplicationDetailsModal
+          application={selectedApp}
+          onClose={() => setSelectedApp(null)}
+          onSave={(id, updates) => handleUpdateApp({ id, data: updates })}
+        />
+      )}
     </div>
   );
 }

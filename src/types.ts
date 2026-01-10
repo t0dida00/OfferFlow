@@ -1,10 +1,11 @@
 export interface Application {
-    id: string;
+    _id: string;
     company: string;
     role: string;
     location: string;
     date: string;
     status: string;
+    emailIds: string[];
 }
 
 export interface Email {

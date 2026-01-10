@@ -1,5 +1,5 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
-import { User } from '../types';
+import { User, Application } from '../types';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -31,7 +31,14 @@ export const syncGmail = async (): Promise<{ message: string }> => {
 };
 
 export const fetchCurrentUser = async (): Promise<User> => {
-    const response = await api.get<any>('/auth/me');
-    return response.data?.data;
+    const response = await api.get<User>('/auth/me');
+    // return response.data;
+    // user changed response structure to .data.data in step 186 manually
+    return (response.data as any).data;
+};
+
+export const updateApplication = async (id: string, data: Partial<Application>): Promise<Application> => {
+    const response = await api.put<Application>(`/applications/${id}`, data);
+    return response.data;
 };
 
