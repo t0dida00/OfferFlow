@@ -13,25 +13,23 @@ import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
 import { RecentEmailsList } from './RecentEmailsList';
 import { fetchApplications, syncGmail } from '../services/api';
+import { User } from '../types';
 
 
 interface DashboardProps {
-  userEmail: string;
+  user: User | null;
   onLogout: () => void;
 }
 
-export function Dashboard({ userEmail, onLogout }: DashboardProps) {
+export function Dashboard({ user, onLogout }: DashboardProps) {
   const queryClient = useQueryClient();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [lastSync, setLastSync] = useState(new Date());
-
+  const [lastSync, setLastSync] = useState<Date | null>(user?.lastSyncTime ? new Date(user.lastSyncTime) : null);
   const { data: rawApplications } = useQuery({
     queryKey: ['applications'],
     queryFn: fetchApplications,
   });
-
   const applications = rawApplications?.data || [];
-
   const { mutate: handleSync, isPending: isSyncing } = useMutation({
     mutationFn: syncGmail,
     onSuccess: () => {
@@ -65,7 +63,7 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">JobTracker Pro</h1>
                 <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <Mail className="w-3 h-3" />
-                  {userEmail}
+                  {user?.email}
                 </p>
               </div>
             </div>
@@ -102,12 +100,13 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
 
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Last Sync Info */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-center gap-2">
+        {lastSync && <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <span className="text-sm text-blue-900 dark:text-blue-300">
-            Last Gmail sync: {lastSync.toLocaleString()}
+            Last Gmail sync: {lastSync?.toLocaleString()}
           </span>
-        </div>
+        </div>}
+
 
         {/* Statistics Section */}
         {/* <StatsSection applications={mockApplications} /> */}

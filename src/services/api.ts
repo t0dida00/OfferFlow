@@ -1,4 +1,5 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
+import { User } from '../types';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -27,5 +28,10 @@ export const fetchEmails = async (): Promise<any> => {
 export const syncGmail = async (): Promise<{ message: string }> => {
     const response = await api.post<{ message: string }>('/gmail/analyze');
     return response.data;
+};
+
+export const fetchCurrentUser = async (): Promise<User> => {
+    const response = await api.get<any>('/auth/me');
+    return response.data?.data;
 };
 

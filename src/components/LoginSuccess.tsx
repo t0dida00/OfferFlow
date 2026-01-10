@@ -1,14 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 
 interface LoginSuccessProps {
-    onLogin: (email: string, token: string) => void;
-}
-
-interface JwtPayload {
-    email: string;
-    // add other fields if needed
+    onLogin: (token: string) => void;
 }
 
 export function LoginSuccess({ onLogin }: LoginSuccessProps) {
@@ -19,27 +13,10 @@ export function LoginSuccess({ onLogin }: LoginSuccessProps) {
         const token = searchParams.get('token');
 
         if (token) {
-            try {
-                const decoded = jwtDecode<JwtPayload>(token);
-                // Assuming the token contains the email. If not, we might need a fallback or a fetch.
-                // The user request implies "login by Gmail is handled by backend" and returns a token.
-                // Standard JWTs usually have 'email' or 'sub' as identifiers.
-                // Let's assume 'email' is in the payload for now based on typical OAuth flows, 
-                // or we'll use a placeholder if decoding fails but token exists? 
-                // No, better to try/catch.
-
-                if (decoded.email) {
-                    onLogin(decoded.email, token);
-                    navigate('/dashboard');
-                } else {
-                    console.error("Token missing email field");
-                    navigate('/');
-                }
-            } catch (error) {
-                console.error("Invalid token:", error);
-                navigate('/');
-            }
+            onLogin(token);
+            navigate('/dashboard');
         } else {
+            console.error("Missing token in URL params");
             navigate('/');
         }
     }, [searchParams, navigate, onLogin]);

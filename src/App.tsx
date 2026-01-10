@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { LoginPage } from './components/LoginPage';
 import { Dashboard } from './components/Dashboard';
 import { ThemeToggle } from './components/ThemeToggle';
 import { LoginSuccess } from './components/LoginSuccess';
 import { ProtectedRoute } from './components/ProtectedRoute';
-
-interface JwtPayload {
-  email: string;
-}
+import { User } from './types';
+import { fetchCurrentUser } from './services/api';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Apply dark mode class to html element
@@ -26,15 +23,22 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  const handleLogin = (email: string, token: string) => {
-    setUserEmail(email);
-    setIsLoggedIn(true);
+  const handleLogin = async (token: string) => {
     localStorage.setItem('auth_token', token);
+    try {
+      const userData = await fetchCurrentUser();
+      setUser(userData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Failed to fetch user profile", error);
+      localStorage.removeItem('auth_token');
+      setIsLoggedIn(false);
+    }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setUserEmail('');
+    setUser(null);
     localStorage.removeItem('auth_token');
   };
 
@@ -44,22 +48,21 @@ export default function App() {
 
   // Check for existing token on mount
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      try {
-        const decoded = jwtDecode<JwtPayload>(token);
-        if (decoded.email) {
-          setUserEmail(decoded.email);
+    const checkAuth = async () => {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        try {
+          const userData = await fetchCurrentUser();
+          setUser(userData);
           setIsLoggedIn(true);
-        } else {
+        } catch (e) {
+          console.error("Invalid token found in storage", e);
           localStorage.removeItem('auth_token');
         }
-      } catch (e) {
-        console.error("Invalid token found in storage", e);
-        localStorage.removeItem('auth_token');
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+    checkAuth();
   }, []);
 
   if (isLoading) {
@@ -89,7 +92,7 @@ export default function App() {
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <Dashboard
-                  userEmail={userEmail}
+                  user={user}
                   onLogout={handleLogout}
                 />
               </ProtectedRoute>
