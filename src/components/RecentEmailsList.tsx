@@ -1,7 +1,6 @@
-
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Mail, RefreshCw } from 'lucide-react';
-import { fetchEmails } from '../services/api';
+import { fetchEmails, syncGmail } from '../services/api';
 import { Email } from '../types';
 
 const statusColors: Record<string, string> = {
@@ -12,10 +11,23 @@ const statusColors: Record<string, string> = {
 };
 
 export function RecentEmailsList() {
-    const { data: rawEmails, isLoading, refetch } = useQuery({
+    const queryClient = useQueryClient();
+    const { data: rawEmails, isLoading } = useQuery({
         queryKey: ['emails'],
         queryFn: fetchEmails,
     });
+
+    const { mutate: handleSync, isPending: isSyncing } = useMutation({
+        mutationFn: syncGmail,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['emails'] });
+            queryClient.invalidateQueries({ queryKey: ['applications'] });
+        },
+        onError: (error) => {
+            console.error('Failed to sync Gmail:', error);
+        }
+    });
+
     const emails: Email[] = rawEmails?.data || [];
 
     return (
@@ -62,7 +74,20 @@ export function RecentEmailsList() {
                     <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 p-8 text-center">
                         <Mail className="w-12 h-12 mb-3 opacity-20" />
                         <p>No recent emails found</p>
-                        <button onClick={() => refetch()} className="mt-4 text-blue-600 hover:underline text-sm">Refresh</button>
+                        <button
+                            onClick={() => handleSync()}
+                            disabled={isSyncing}
+                            className="mt-4 text-blue-600 hover:underline cursor-pointer text-sm flex items-center gap-2 disabled:opacity-50 disabled:no-underline"
+                        >
+                            {isSyncing ? (
+                                <>
+                                    <RefreshCw className="w-3 h-3 animate-spin" />
+                                    Syncing...
+                                </>
+                            ) : (
+                                'Sync now'
+                            )}
+                        </button>
                     </div>
                 )}
             </div>
