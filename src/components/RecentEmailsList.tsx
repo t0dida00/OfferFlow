@@ -5,10 +5,10 @@ import { fetchEmails } from '../services/api';
 import { Email } from '../types';
 
 const statusColors: Record<string, string> = {
-    pending: 'text-gray-600 bg-gray-100',
-    interview: 'text-yellow-700 bg-yellow-100',
-    offer: 'text-green-700 bg-green-100',
-    rejected: 'text-red-700 bg-red-100',
+    Applied: 'text-gray-600 bg-gray-100',
+    Interview: 'text-yellow-700 bg-yellow-100',
+    Offer: 'text-green-700 bg-green-100',
+    Rejected: 'text-red-700 bg-red-100',
 };
 
 export function RecentEmailsList() {
