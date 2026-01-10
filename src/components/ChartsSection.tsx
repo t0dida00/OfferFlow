@@ -11,10 +11,10 @@ interface ChartsSectionProps {
 type TimeRange = 'annually' | 'all';
 
 const COLORS = {
-  'pending': '#9ca3af', // Gray
-  'interview': '#eab308', // Yellow
-  'offer': '#22c55e', // Green
-  'rejected': '#ef4444', // Red
+  'Pending': '#9ca3af', // Gray
+  'Interview': '#eab308', // Yellow
+  'Offer': '#22c55e', // Green
+  'Rejected': '#ef4444', // Red
 };
 
 export function ChartsSection({ applications }: ChartsSectionProps) {
@@ -115,10 +115,10 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
     }
 
     const stats = {
-      'pending': 0,
-      'interview': 0,
-      'offer': 0,
-      'rejected': 0,
+      'Pending': 0,
+      'Interview': 0,
+      'Offer': 0,
+      'Rejected': 0,
     };
 
     filteredApps.forEach(app => {
@@ -129,7 +129,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
         stats[app.status as keyof typeof stats]++;
       } else {
         // Fallback for unknown status, typically count as Pending
-        stats['pending']++;
+        stats['Pending']++;
       }
     });
 
@@ -146,7 +146,6 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
   const { data: chartData, label: chartLabel } = getChartData();
   const { data: pieData, label: pieLabel } = getPieChartData();
-  const total = pieData.reduce((sum, item) => sum + item.value, 0);
   const CenterLabel = ({ viewBox }: any) => {
     const { cx, cy } = viewBox;
 
@@ -168,7 +167,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           dominantBaseline="central"
           className="fill-gray-900 text-xl font-semibold"
         >
-          {total}
+          {pieData.length}
         </text>
       </>
     );

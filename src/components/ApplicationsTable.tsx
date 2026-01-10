@@ -8,10 +8,10 @@ interface ApplicationsTableProps {
 }
 
 const resultStyles: Record<string, { bg: string; text: string; dot: string }> = {
-  pending: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
-  interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
-  offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
-  rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
+  Pending: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
+  Interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
+  Offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
+  Rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
 };
 
 export function ApplicationsTable({ applications }: ApplicationsTableProps) {
@@ -169,7 +169,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               </tr>
             ) : (
               paginatedApplications.map((app) => {
-                const style = resultStyles[app.status] || resultStyles.pending;
+                const style = resultStyles[app.status] || resultStyles.Pending;
                 return (
                   <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
