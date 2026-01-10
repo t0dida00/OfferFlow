@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Mail, Calendar, MapPin, Building, Briefcase, ExternalLink, Plus } from 'lucide-react';
 import { Application, Email } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -38,9 +38,21 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
         setFormData(prev => ({ ...prev, emailIds: newEmailIds }));
     };
 
+    useEffect(() => {
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = originalStyle;
+        };
+    }, []);
+
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-h-[90vh] flex flex-col" style={{ maxWidth: '768px' }}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 " onClick={onClose} style={{ overflowY: 'auto' }}>
+            <div
+                className="bg-white dark:bg-gray-800 min-h-0 rounded-2xl shadow-2xl w-full flex flex-col "
+                style={{ maxWidth: '768px', maxHeight: '95dvh', overflowY: 'auto' }}
+                onClick={(e) => e.stopPropagation()}
+            >
                 {/* Header */}
                 <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shrink-0">
                     <div>
@@ -55,7 +67,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+                <div className="flex-1 flex flex-col md:flex-row min-h-0">
                     {/* Left Column: Edit Form */}
                     <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
                         <form id="edit-form" onSubmit={handleSubmit} className="space-y-4">
@@ -122,7 +134,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     </div>
 
                     {/* Right Column: Related Emails */}
-                    <div className="w-full md:w-2/3 p-6 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+                    <div className="w-full md:w-2/3 p-6 bg-gray-50 dark:bg-gray-900 overflow-y-auto max-h-[100px]" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center gap-2">
                                 <Mail className="w-5 h-5" /> Related Emails

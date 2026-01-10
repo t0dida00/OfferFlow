@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { X, Search, Check } from 'lucide-react';
 import { Email } from '../types';
 
@@ -14,11 +14,11 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
     const [searchQuery, setSearchQuery] = useState('');
     const [tempSelectedIds, setTempSelectedIds] = useState<Set<string>>(new Set(selectedEmailIds));
 
-    // Reset local state when modal opens/closes or props change
-    // Effect handling could be added if needed, but initializing state from props is okay for now 
-    // provided we sync when the modal opens. For simplicity in this functional component, 
-    // we might rely on the parent to mount/unmount or use an effect if it stays mounted.
-    // Let's assume conditional rendering from parent for "isOpen", or better, use an effect.
+    useEffect(() => {
+        if (isOpen) {
+            setTempSelectedIds(new Set(selectedEmailIds));
+        }
+    }, [isOpen, selectedEmailIds]);
 
     // Better approach: use useMemo or useEffect to sync whenisOpen becomes true, 
     // but since we can't easily conditionally call hooks based on isOpen in a clean way without complexity,
@@ -52,11 +52,28 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
         onClose();
     };
 
+    useEffect(() => {
+        if (isOpen) {
+            const originalStyle = window.getComputedStyle(document.body).overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = originalStyle;
+            };
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-h-[80vh] flex flex-col" style={{ maxWidth: '1024px' }}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4" onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+        }}>
+            <div
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full flex flex-col"
+                style={{ maxWidth: '768px', maxHeight: '90dvh', overflowY: 'auto' }}
+                onClick={(e) => e.stopPropagation()}
+            >
                 {/* Header */}
                 <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shrink-0">
                     <div>
