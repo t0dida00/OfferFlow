@@ -7,11 +7,12 @@ import {
   RefreshCw,
   Calendar
 } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApplicationsTable } from './ApplicationsTable';
 import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
-// import { RecentEmailsList } from './RecentEmailsList';
-import { mockApplications } from '../data/mockData';
+import { RecentEmailsList } from './RecentEmailsList';
+import { fetchApplications, syncGmail } from '../services/api';
 
 
 interface DashboardProps {
@@ -20,18 +21,31 @@ interface DashboardProps {
 }
 
 export function Dashboard({ userEmail, onLogout }: DashboardProps) {
+  const queryClient = useQueryClient();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState(new Date());
 
-  const handleGmailSync = async () => {
-    setIsSyncing(true);
-    setLastSync(new Date());
-    // Placeholder for backend sync logic
-    // e.g., await fetch('/api/v1/sync', { method: 'POST', headers: { ... } });
-    setTimeout(() => {
-      setIsSyncing(false);
-    }, 2000);
+  const { data: rawApplications } = useQuery({
+    queryKey: ['applications'],
+    queryFn: fetchApplications,
+  });
+
+  const applications = rawApplications?.data || [];
+
+  const { mutate: handleSync, isPending: isSyncing } = useMutation({
+    mutationFn: syncGmail,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+      queryClient.invalidateQueries({ queryKey: ['emails'] });
+      setLastSync(new Date());
+    },
+    onError: (error) => {
+      console.error('Failed to sync Gmail:', error);
+    }
+  });
+
+  const handleGmailSync = () => {
+    handleSync();
   };
 
 
@@ -99,22 +113,19 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
         {/* <StatsSection applications={mockApplications} /> */}
 
         {/* Charts Section */}
-        <ChartsSection applications={mockApplications} />
+        <ChartsSection applications={applications} />
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Applications Table */}
-          <div className="lg:col-span-3">
-            {/* Expanded col-span to 3 since email list is gone/hidden */}
-            <ApplicationsTable applications={mockApplications} />
+          <div className="lg:col-span-2">
+            <ApplicationsTable applications={applications} />
           </div>
 
-          {/* Recent Emails List - Removed for now */}
-          {/* <RecentEmailsList
-            emails={[]}
-            isLoading={false}
-            onSync={() => {}}
-          /> */}
+          {/* Recent Emails List */}
+          <div>
+            <RecentEmailsList />
+          </div>
         </div>
       </main>
 

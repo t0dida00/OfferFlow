@@ -1,30 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface Application {
-  id: string;
-  company: string;
-  role: string;
-  location: string;
-  dateApplied: string;
-  result: string;
-}
+import { Application } from '../types';
 
 interface ApplicationsTableProps {
   applications: Application[];
 }
 
 const resultStyles: Record<string, { bg: string; text: string; dot: string }> = {
-  Pending: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
-  Interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
-  Offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
-  Rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
+  pending: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
+  interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
+  offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
+  rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
 };
 
 export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterResult, setFilterResult] = useState('all');
-  const [sortField, setSortField] = useState<keyof Application>('dateApplied');
+  const [sortField, setSortField] = useState<keyof Application>('date');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -49,12 +42,12 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         app.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
         app.location.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter = filterResult === 'all' || app.result === filterResult;
+      const matchesFilter = filterResult === 'all' || app.status === filterResult;
       return matchesSearch && matchesFilter;
     })
     .sort((a, b) => {
       let comparison = 0;
-      if (sortField === 'dateApplied') {
+      if (sortField === 'date') {
         comparison = new Date(a[sortField]).getTime() - new Date(b[sortField]).getTime();
       } else {
         comparison = a[sortField].localeCompare(b[sortField]);
@@ -149,7 +142,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               </th>
               <th className="px-6 py-3 text-left">
                 <button
-                  onClick={() => handleSort('dateApplied')}
+                  onClick={() => handleSort('date')}
                   className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Date Applied
@@ -158,7 +151,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               </th>
               <th className="px-6 py-3 text-left">
                 <button
-                  onClick={() => handleSort('result')}
+                  onClick={() => handleSort('status')}
                   className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Result
@@ -176,7 +169,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               </tr>
             ) : (
               paginatedApplications.map((app) => {
-                const style = resultStyles[app.result] || resultStyles.Pending;
+                const style = resultStyles[app.status] || resultStyles.pending;
                 return (
                   <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
@@ -192,12 +185,12 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
                       {app.location}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                      {new Date(app.dateApplied).toLocaleDateString()}
+                      {new Date(app.date).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
-                        {app.result}
+                        {app.status}
                       </span>
                     </td>
                   </tr>

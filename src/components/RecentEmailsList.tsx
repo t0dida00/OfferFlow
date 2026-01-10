@@ -1,22 +1,23 @@
+
+import { useQuery } from '@tanstack/react-query';
 import { Mail, RefreshCw } from 'lucide-react';
+import { fetchEmails } from '../services/api';
+import { Email } from '../types';
 
-interface EmailMessage {
-    id: string;
-    snippet: string;
-    subject: string;
-    from: string;
-    date: string;
-    body?: string;
-}
+const statusColors: Record<string, string> = {
+    pending: 'text-gray-600 bg-gray-100',
+    interview: 'text-yellow-700 bg-yellow-100',
+    offer: 'text-green-700 bg-green-100',
+    rejected: 'text-red-700 bg-red-100',
+};
 
-interface RecentEmailsListProps {
-    emails: EmailMessage[];
-    isLoading: boolean;
-    onSync: () => void;
-}
+export function RecentEmailsList() {
+    const { data: rawEmails, isLoading, refetch } = useQuery({
+        queryKey: ['emails'],
+        queryFn: fetchEmails,
+    });
+    const emails: Email[] = rawEmails?.data || [];
 
-export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsListProps) {
-    console.log(emails);
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col h-[600px]">
             <div className="p-6 border-b border-gray-100 dark:border-gray-700">
@@ -36,13 +37,13 @@ export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsList
                     <div className="divide-y divide-gray-100 dark:divide-gray-700">
                         {emails.map(email => (
                             <div
-                                key={email.id}
+                                key={email.emailId}
                                 className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group"
-                                onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${email.id}`, '_blank')}
+                                onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${email.emailId}`, '_blank')}
                             >
                                 <div className="flex justify-between items-start mb-1">
-                                    <span className="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-[180px]" title={email.from}>
-                                        {email.from.replace(/<.*>/, '').trim()}
+                                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
+                                        {email.status}
                                     </span>
                                     <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-2">
                                         {new Date(email.date).toLocaleDateString()}
@@ -61,7 +62,7 @@ export function RecentEmailsList({ emails, isLoading, onSync }: RecentEmailsList
                     <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 p-8 text-center">
                         <Mail className="w-12 h-12 mb-3 opacity-20" />
                         <p>No recent emails found</p>
-                        <button onClick={onSync} className="mt-4 text-blue-600 hover:underline text-sm">Try syncing again</button>
+                        <button onClick={() => refetch()} className="mt-4 text-blue-600 hover:underline text-sm">Refresh</button>
                     </div>
                 )}
             </div>

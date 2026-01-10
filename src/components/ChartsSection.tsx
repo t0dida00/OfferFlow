@@ -2,14 +2,7 @@ import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Label } from 'recharts';
 import { Calendar } from 'lucide-react';
 
-interface Application {
-  id: string;
-  company: string;
-  role: string;
-  location: string;
-  dateApplied: string;
-  result: string;
-}
+import { Application } from '../types';
 
 interface ChartsSectionProps {
   applications: Application[];
@@ -18,10 +11,10 @@ interface ChartsSectionProps {
 type TimeRange = 'annually' | 'all';
 
 const COLORS = {
-  'Pending': '#9ca3af', // Gray
-  'Interview': '#eab308', // Yellow
-  'Offer': '#22c55e', // Green
-  'Rejected': '#ef4444', // Red
+  'pending': '#9ca3af', // Gray
+  'interview': '#eab308', // Yellow
+  'offer': '#22c55e', // Green
+  'rejected': '#ef4444', // Red
 };
 
 export function ChartsSection({ applications }: ChartsSectionProps) {
@@ -38,7 +31,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
   // Get available years from data
   const availableYears = Array.from(new Set([
     currentYear,
-    ...applications.map(app => new Date(app.dateApplied).getFullYear())
+    ...applications.map(app => new Date(app.date).getFullYear())
   ])).sort((a, b) => b - a);
 
   // Process data for Bar Chart (Applications Over Time)
@@ -50,7 +43,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
       for (let i = 0; i < 12; i++) {
         const monthApps = applications.filter(app => {
-          const appDate = new Date(app.dateApplied);
+          const appDate = new Date(app.date);
           return appDate.getMonth() === i && appDate.getFullYear() === year;
         });
 
@@ -59,8 +52,8 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
         yearData.push({
           name: monthDate.toLocaleDateString('en-US', { month: 'short' }),
           applications: monthApps.length,
-          interviews: monthApps.filter(app => app.result === 'Interview').length,
-          offers: monthApps.filter(app => app.result === 'Offer').length,
+          interviews: monthApps.filter(app => app.status === 'interview').length,
+          offers: monthApps.filter(app => app.status === 'offer').length,
         });
       }
 
@@ -74,7 +67,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
       const allTimeData: { [key: string]: { applications: number; interviews: number; offers: number } } = {};
 
       applications.forEach(app => {
-        const appDate = new Date(app.dateApplied);
+        const appDate = new Date(app.date);
         const year = appDate.getFullYear().toString();
 
         if (!allTimeData[year]) {
@@ -82,8 +75,8 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
         }
 
         allTimeData[year].applications++;
-        if (app.result === 'Interview') allTimeData[year].interviews++;
-        if (app.result === 'Offer') allTimeData[year].offers++;
+        if (app.status === 'interview') allTimeData[year].interviews++;
+        if (app.status === 'offer') allTimeData[year].offers++;
       });
 
       const sortedData = Object.entries(allTimeData)
@@ -117,26 +110,26 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
     if (pieTimeRange === 'annually') {
       filteredApps = applications.filter(app =>
-        new Date(app.dateApplied).getFullYear() === pieSelectedYear
+        new Date(app.date).getFullYear() === pieSelectedYear
       );
     }
 
     const stats = {
-      'Pending': 0,
-      'Interview': 0,
-      'Offer': 0,
-      'Rejected': 0,
+      'pending': 0,
+      'interview': 0,
+      'offer': 0,
+      'rejected': 0,
     };
 
     filteredApps.forEach(app => {
       // Map 'Applied' or other statuses to 'Pending' if needed, or handle as is.
       // Assuming 'Applied' counts as Pending or key exists.
       // If 'result' matches keys exactly:
-      if (stats.hasOwnProperty(app.result)) {
-        stats[app.result as keyof typeof stats]++;
+      if (stats.hasOwnProperty(app.status)) {
+        stats[app.status as keyof typeof stats]++;
       } else {
         // Fallback for unknown status, typically count as Pending
-        stats['Pending']++;
+        stats['pending']++;
       }
     });
 
