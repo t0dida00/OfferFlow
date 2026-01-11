@@ -72,7 +72,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
                         <form id="edit-form" onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
+                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                     <Building className="w-4 h-4" /> Company
                                 </label>
                                 <input
@@ -83,7 +83,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
+                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                     <Briefcase className="w-4 h-4" /> Role
                                 </label>
                                 <input
@@ -94,7 +94,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
+                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                     <MapPin className="w-4 h-4" /> Location
                                 </label>
                                 <input
@@ -105,7 +105,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
+                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                     <Calendar className="w-4 h-4" /> Date Applied
                                 </label>
                                 <input
@@ -136,16 +136,16 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     {/* Right Column: Related Emails */}
                     <div className="w-full md:w-2/3 p-6 bg-gray-50 dark:bg-gray-900 overflow-y-auto max-h-[100px]" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                            <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
                                 <Mail className="w-5 h-5" /> Related Emails
                             </h3>
                             <button
                                 type="button"
                                 onClick={() => setIsEmailModalOpen(true)}
-                                className="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
+                                className="rounded-full p-0.5 btn-icon-custom hover:opacity-90 transition-opacity flex items-center justify-center"
                                 title="Manage linked emails"
                             >
-                                <Plus className="w-4 h-4" />
+                                <Plus className="w-6 h-6" />
                             </button>
                         </div>
 
@@ -160,17 +160,17 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                                         className="block bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
                                     >
                                         <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-medium text-gray-900 dark:text-white line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                            <h4 className="font-medium line-clamp-1 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                                 {email.subject}
                                             </h4>
                                             <div className="flex items-center gap-2">
-                                                <span className="text-xs text-gray-500 whitespace-nowrap">
+                                                <span className="text-gray-500 whitespace-nowrap">
                                                     {new Date(email.date).toLocaleDateString()}
                                                 </span>
                                                 <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-blue-500" />
                                             </div>
                                         </div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">
+                                        <p className="line-clamp-2 mb-2 text-gray-700 dark:text-gray-300">
                                             {email.snippet}
                                         </p>
                                     </a>
@@ -189,14 +189,14 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         form="edit-form"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="px-3 py-3 rounded-lg btn-primary"
                     >
                         Save Changes
                     </button>

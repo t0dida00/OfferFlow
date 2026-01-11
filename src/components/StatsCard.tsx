@@ -40,7 +40,7 @@ export function StatsCard({ label, value, icon: Icon, color }: StatsCardProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
       <div className="flex justify-between items-start mb-4">
-        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+        <p className="font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
           {label}
         </p>
         <div className={`p-2 rounded-lg ${styles.bg} ${styles.text}`}>

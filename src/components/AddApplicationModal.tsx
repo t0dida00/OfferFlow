@@ -22,8 +22,8 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
         <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Add New Application</h2>
           <button
@@ -36,7 +36,7 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
               Company Name *
             </label>
             <input
@@ -50,7 +50,7 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
               Role *
             </label>
             <input
@@ -64,7 +64,7 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
               Location *
             </label>
             <input
@@ -78,7 +78,7 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
               Date Applied *
             </label>
             <input
@@ -91,7 +91,7 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
               Status
             </label>
             <select
@@ -110,13 +110,13 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex-1 px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex-1 px-3 py-3 rounded-lg btn-primary"
             >
               Add Application
             </button>

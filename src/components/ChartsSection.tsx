@@ -161,7 +161,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           y={cy - 6}
           textAnchor="middle"
           dominantBaseline="central"
-          className="fill-gray-500 text-sm"
+          style={{ fill: 'var(--main-text-color)', opacity: 0.7 }}
         >
           Total
         </text>
@@ -170,7 +170,8 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           y={cy + 12}
           textAnchor="middle"
           dominantBaseline="central"
-          className="fill-gray-900 text-xl font-semibold"
+          className="text-xl font-semibold"
+          style={{ fill: 'var(--main-text-color)' }}
         >
           {pieData.length}
         </text>
@@ -186,15 +187,15 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6" >
         {applications.length === 0 ?
           <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
-            <p className="text-xl font-medium text-gray-500 dark:text-gray-400">No data</p>
+            <p className="text-xl font-medium">No data</p>
           </div> : <>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Applications Over Time</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{chartLabel}</p>
+                <h3 className="text-lg font-semibold">Applications Over Time</h3>
+                <p className="text-sm font-medium opacity-70">{chartLabel}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                <Calendar className="w-4 h-4 opacity-70" />
 
                 {timeRange === 'annually' && (
                   <select
@@ -224,11 +225,11 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" className="dark:stroke-gray-700" />
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={{ fill: 'var(--main-text-color)', fontSize: 12 }}
                   tickFormatter={(value) => value.startsWith('_placeholder_') ? '' : value}
                 />
                 <YAxis
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={{ fill: 'var(--main-text-color)', fontSize: 12 }}
                   domain={[0, 'auto']}
                   interval={0}
                   allowDecimals={false}
@@ -268,15 +269,15 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 h-[756px]">
         {applications.length === 0 ?
           <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
-            <p className="text-xl font-medium text-gray-500 dark:text-gray-400">No data</p>
+            <p className="text-xl font-medium">No data</p>
           </div> : <>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Status Distribution</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{pieLabel}</p>
+                <h3 className="text-lg font-semibold">Status Distribution</h3>
+                <p className="text-sm font-medium opacity-70">{pieLabel}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                <Calendar className="w-4 h-4 opacity-70" />
 
                 {pieTimeRange === 'annually' && (
                   <select

@@ -68,7 +68,7 @@
     padding: 14px 50px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(35, 47, 63, 0.4);
 }
@@ -76,6 +76,7 @@
 .auth-wrapper button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(35, 47, 63, 0.6);
+    opacity: 0.7;
 }
 
 .auth-wrapper button:active {
@@ -199,7 +200,7 @@
 }
 
 .slide-panel {
-    background: linear-gradient(90deg, rgba(35, 47, 63, 1) 0%, rgba(72, 84, 101, 1) 99%);
+    background: linear-gradient(90deg, rgba(35, 47, 63, 1) 50%, rgba(72, 84, 101, 1) 99%);
     background-position: center;
     color: #FFFFFF;
     position: relative;
@@ -263,15 +264,17 @@
     margin: 0 8px;
     height: 45px;
     width: 45px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: var(--main-text-color);
+    cursor: pointer;
 }
 
 .social-links a:hover {
-    border-color: var(--main-text-color);
-    background: var(--main-text-color);
+    border-color: #232F3F;
+    background: #232F3F;
     color: #fff;
     transform: translateY(-3px);
+    opacity: 0.9;
     /* box-shadow: 0 5px 15px rgba(var(--main-text-color), 0.4); */
 }
 

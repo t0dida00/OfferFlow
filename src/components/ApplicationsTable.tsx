@@ -89,7 +89,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
       {/* Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">All Applications</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">All Applications</h2>
 
         {/* Search and Filter */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -129,7 +129,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('_id')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   ID
                   <ArrowUpDown className="w-3 h-3" />
@@ -138,7 +138,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('company')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium uppercase tracking-wider hover:opacity-70 text-gray-500 dark:text-gray-400"
                 >
                   Company
                   <ArrowUpDown className="w-3 h-3" />
@@ -147,7 +147,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('role')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Role
                   <ArrowUpDown className="w-3 h-3" />
@@ -156,7 +156,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('location')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Location
                   <ArrowUpDown className="w-3 h-3" />
@@ -165,7 +165,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('date')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Date Applied
                   <ArrowUpDown className="w-3 h-3" />
@@ -174,7 +174,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               <th className="px-6 py-3 text-left">
                 <button
                   onClick={() => handleSort('status')}
-                  className="flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Result
                   <ArrowUpDown className="w-3 h-3" />
@@ -198,23 +198,23 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
                     onClick={() => setSelectedApp(app)}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       #{app._id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">{app.company}</div>
+                      <div className="font-medium text-gray-900 dark:text-white">{app.company}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900 dark:text-gray-300">{app.role}</div>
+                      <div className="text-gray-900 dark:text-gray-300">{app.role}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
                       {app.location}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
                       {new Date(app.date).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium ${style.bg} ${style.text}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
                         {app.status}
                       </span>
@@ -229,13 +229,16 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
 
       <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400">
             Showing {filteredApplications.length === 0 ? 0 : startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredApplications.length)} of {filteredApplications.length} results
           </p>
           <select
             value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value={10}>10 per page</option>
             <option value={20}>20 per page</option>
@@ -253,7 +256,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+          <span className="font-medium text-gray-600 dark:text-gray-400">
             Page {currentPage} of {Math.max(1, totalPages)}
           </span>
 

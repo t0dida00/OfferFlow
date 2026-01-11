@@ -77,7 +77,7 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
                 {/* Header */}
                 <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shrink-0">
                     <div>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Link Emails</h2>
+                        <h2 className="text-xl font-semibold">Link Emails</h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Select emails to link to this application</p>
                     </div>
                     <button
@@ -128,14 +128,14 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-center mb-1">
-                                            <h4 className={`text-sm font-semibold truncate ${isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-white'}`}>
+                                            <h4 className={`text-sm font-semibold truncate ${isSelected ? 'text-blue-900 dark:text-blue-100' : ''}`}>
                                                 {email.subject || '(No Subject)'}
                                             </h4>
                                             <span className="text-xs text-gray-500 whitespace-nowrap ml-3">
                                                 {new Date(email.date).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                                        <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
                                             {email.snippet}
                                         </p>
                                     </div>
@@ -151,19 +151,19 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
 
                 {/* Footer */}
                 <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center shrink-0">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-gray-500 dark:text-gray-400">
                         {tempSelectedIds.size} selected
                     </div>
                     <div className="flex gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                            className="px-3 py-3 rounded-lg btn-primary shadow-sm"
                         >
                             Save Selection
                         </button>

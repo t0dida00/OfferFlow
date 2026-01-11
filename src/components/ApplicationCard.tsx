@@ -62,27 +62,27 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
             </div>
           </div>
         </div>
-        
+
         <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.textColor}`}>
           <div className={`w-2 h-2 rounded-full ${status.dotColor}`}></div>
-          <span className="text-sm font-medium">{status.label}</span>
+          <span className=" font-medium">{status.label}</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2  text-gray-600">
           <MapPin className="w-4 h-4" />
           <span>{application.location}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2  text-gray-600">
           <DollarSign className="w-4 h-4" />
           <span>{application.salary}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="w-4 h-4" />
           <span>Applied: {new Date(application.appliedDate).toLocaleDateString()}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="w-4 h-4" />
           <span>Updated: {new Date(application.lastUpdate).toLocaleDateString()}</span>
         </div>
@@ -91,7 +91,7 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
       {application.notes && (
         <div className="flex gap-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
           <FileText className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-blue-900">{application.notes}</p>
+          <p className=" text-blue-900">{application.notes}</p>
         </div>
       )}
     </div>
