@@ -108,24 +108,41 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         </div>}
 
 
-        {/* Statistics Section */}
-        {/* <StatsSection applications={mockApplications} /> */}
-
-        {/* Charts Section */}
-        <ChartsSection applications={applications} />
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Applications Table */}
-          <div className="lg:col-span-2">
-            <ApplicationsTable applications={applications} />
+        {applications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
+            <div className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">No Data</div>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Sync your Gmail to get started tracking your job applications.</p>
+            <button
+              onClick={handleGmailSync}
+              disabled={isSyncing}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium"
+            >
+              <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+            </button>
           </div>
+        ) : (
+          <>
+            {/* Statistics Section */}
+            {/* <StatsSection applications={mockApplications} /> */}
 
-          {/* Recent Emails List */}
-          <div>
-            <RecentEmailsList />
-          </div>
-        </div>
+            {/* Charts Section */}
+            <ChartsSection applications={applications} />
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Applications Table */}
+              <div className="lg:col-span-2">
+                <ApplicationsTable applications={applications} />
+              </div>
+
+              {/* Recent Emails List */}
+              <div>
+                <RecentEmailsList />
+              </div>
+            </div>
+          </>
+        )}
       </main>
 
       {/* Add Application Modal */}

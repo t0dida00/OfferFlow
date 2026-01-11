@@ -1,0 +1,357 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --main-text-color: #232F3F;
+}
+
+.login-page-body {
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    /* Or keep the page background white and just center this? 
+       The user provided body styles on 'body'. 
+       I will apply these to the main container. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.auth-wrapper h1 {
+    font-weight: 700;
+    margin: 0;
+    font-size: 28px;
+    color: #232F3F;
+}
+
+.auth-wrapper h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 32px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.auth-wrapper p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin: 20px 0 30px;
+}
+
+.auth-wrapper span {
+    font-size: 13px;
+    color: #666;
+}
+
+.auth-wrapper a {
+    color: #232F3F;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0;
+    transition: color 0.3s ease;
+}
+
+.auth-wrapper a:hover {
+    color: #4a5d75;
+}
+
+.auth-wrapper button {
+    border-radius: 25px;
+    border: none;
+    background: #232F3F;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 14px 50px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(35, 47, 63, 0.4);
+}
+
+.auth-wrapper button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(35, 47, 63, 0.6);
+}
+
+.auth-wrapper button:active {
+    transform: translateY(0);
+}
+
+.auth-wrapper button:focus {
+    outline: none;
+}
+
+.auth-wrapper button.transparent-btn {
+    background: transparent;
+    border: 2px solid #FFFFFF;
+    box-shadow: none;
+}
+
+.auth-wrapper button.transparent-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-wrapper form {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+}
+
+.auth-wrapper input {
+    background-color: #f3f4f6;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.auth-wrapper input:focus {
+    outline: none;
+    border-color: #232F3F;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(35, 47, 63, 0.1);
+}
+
+.auth-wrapper {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    width: 850px;
+    max-width: 100%;
+    min-height: 550px;
+    color: #232F3F;
+}
+
+.auth-form-box {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.login-form-box {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.auth-wrapper.panel-active .login-form-box {
+    transform: translateX(100%);
+}
+
+.register-form-box {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.auth-wrapper.panel-active .register-form-box {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+@keyframes show {
+
+    0%,
+    49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.slide-panel-wrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.auth-wrapper.panel-active .slide-panel-wrapper {
+    transform: translateX(-100%);
+}
+
+.slide-panel {
+    background: linear-gradient(90deg, rgba(35, 47, 63, 1) 0%, rgba(72, 84, 101, 1) 99%);
+    background-position: center;
+    color: #FFFFFF;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.auth-wrapper.panel-active .slide-panel {
+    transform: translateX(50%);
+}
+
+.panel-content {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.panel-content h1 {
+    color: white;
+}
+
+.panel-content-left {
+    transform: translateX(-20%);
+}
+
+.auth-wrapper.panel-active .panel-content-left {
+    transform: translateX(0);
+}
+
+.panel-content-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.auth-wrapper.panel-active .panel-content-right {
+    transform: translateX(20%);
+}
+
+.social-links {
+    margin: 25px 0;
+}
+
+.social-links a {
+    border: 2px solid #e0e0e0;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 8px;
+    height: 45px;
+    width: 45px;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+}
+
+.social-links a:hover {
+    border-color: var(--main-text-color);
+    background: var(--main-text-color);
+    color: #fff;
+    transform: translateY(-3px);
+    /* box-shadow: 0 5px 15px rgba(var(--main-text-color), 0.4); */
+}
+
+/* Icons */
+.social-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Mobile Switch */
+.mobile-switch {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .auth-wrapper {
+        min-height: auto;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 15px;
+    }
+
+    .auth-form-box {
+        position: static !important;
+        width: 100% !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    .login-form-box,
+    .register-form-box {
+        position: static !important;
+        width: 100% !important;
+        left: 0 !important;
+        transform: none !important;
+        opacity: 1 !important;
+        z-index: 1 !important;
+    }
+
+    .register-form-box {
+        display: none;
+    }
+
+    .auth-wrapper.panel-active .login-form-box {
+        display: none;
+    }
+
+    .auth-wrapper.panel-active .register-form-box {
+        display: block;
+    }
+
+    .slide-panel-wrapper {
+        display: none !important;
+    }
+
+    .auth-wrapper form {
+        padding: 30px 25px;
+        position: static;
+        height: auto;
+    }
+
+    .mobile-switch {
+        display: block;
+        margin-top: 20px;
+        color: #667eea;
+        font-size: 14px;
+    }
+
+    .mobile-switch button {
+        background: transparent;
+        color: #667eea;
+        border: 2px solid #667eea;
+        padding: 10px 30px;
+        margin-top: 10px;
+        box-shadow: none;
+    }
+
+    .mobile-switch button:hover {
+        background: #667eea;
+        color: #fff;
+    }
+}
