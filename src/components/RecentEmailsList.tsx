@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Mail, RefreshCw } from 'lucide-react';
-import { fetchEmails, syncGmail } from '../services/api';
+import { fetchEmails } from '../services/api';
 import { Email } from '../types';
 
 const statusColors: Record<string, string> = {
@@ -11,29 +11,23 @@ const statusColors: Record<string, string> = {
     Rejected: 'text-red-700 bg-red-100',
 };
 
-export function RecentEmailsList() {
+interface RecentEmailsListProps {
+    onSync: () => void;
+    isSyncing: boolean;
+}
+
+export function RecentEmailsList({ onSync, isSyncing }: RecentEmailsListProps) {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
-    const queryClient = useQueryClient();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 600);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
     const { data: rawEmails, isLoading } = useQuery({
         queryKey: ['emails'],
         queryFn: fetchEmails,
-    });
-
-    const { mutate: handleSync, isPending: isSyncing } = useMutation({
-        mutationFn: syncGmail,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['emails'] });
-            queryClient.invalidateQueries({ queryKey: ['applications'] });
-        },
-        onError: (error) => {
-            console.error('Failed to sync Gmail:', error);
-        }
     });
 
     const emails: Email[] = rawEmails?.data || [];
@@ -98,22 +92,16 @@ export function RecentEmailsList() {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                        <Mail className="w-12 h-12 mb-3 opacity-20" />
-                        <p>No recent emails found</p>
+                    <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
+                        <div className="text-2xl font-semibold dark:text-white mb-2">No Recent Emails</div>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">Sync your Gmail to see your recent job-related emails here.</p>
                         <button
-                            onClick={() => handleSync()}
+                            onClick={onSync}
                             disabled={isSyncing}
-                            className="mt-4 text-blue-600 hover:underline cursor-pointer text-sm flex items-center gap-2 disabled:opacity-50 disabled:no-underline"
+                            className="flex items-center gap-2 rounded-lg disabled:opacity-50 font-medium btn-primary"
                         >
-                            {isSyncing ? (
-                                <>
-                                    <RefreshCw className="w-3 h-3 animate-spin" />
-                                    Syncing...
-                                </>
-                            ) : (
-                                'Sync now'
-                            )}
+                            <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+                            <span>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
                         </button>
                     </div>
                 )}

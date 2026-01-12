@@ -157,13 +157,13 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
                     <div className="flex gap-3">
                         <button
                             onClick={onClose}
-                            className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
-                            className="px-3 py-3 rounded-lg btn-primary shadow-sm"
+                            className="rounded-lg btn-primary shadow-sm"
                         >
                             Save Selection
                         </button>

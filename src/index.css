@@ -27,7 +27,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 24px;
   font-style: normal;
@@ -37,10 +37,10 @@ h6 {
 .btn-primary {
   background-color: var(--btn-bg);
   color: var(--btn-text);
-  padding: 0.75rem;
-  /* px-3 py-3 equivalent */
+  padding: 0.5rem 1rem;
   transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: none;
 }
 
 .btn-primary:hover {
@@ -742,8 +742,8 @@ h6 {
     width: 100%;
   }
 
-  .max-w-\[1600px\] {
-    max-width: 1600px;
+  .max-w-\[1440px\] {
+    max-width: 1440px;
   }
 
   .max-w-lg {

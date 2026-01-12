@@ -189,14 +189,14 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         form="edit-form"
-                        className="px-3 py-3 rounded-lg btn-primary"
+                        className="rounded-lg btn-primary"
                     >
                         Save Changes
                     </button>

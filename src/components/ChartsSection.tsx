@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Label } from 'recharts';
 import { Calendar } from 'lucide-react';
 
@@ -28,6 +28,14 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
   const [pieTimeRange, setPieTimeRange] = useState<TimeRange>('annually');
   const [pieSelectedYear, setPieSelectedYear] = useState<number>(currentYear);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640); // 640px is sm breakpoint
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Get available years from data
   const availableYears = Array.from(new Set([
     currentYear,
@@ -52,8 +60,10 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
         yearData.push({
           name: monthDate.toLocaleDateString('en-US', { month: 'short' }),
           applications: monthApps.length,
-          interviews: monthApps.filter(app => app.status === 'interview').length,
-          offers: monthApps.filter(app => app.status === 'offer').length,
+          applied: monthApps.filter(app => app.status === 'Applied').length,
+          interviews: monthApps.filter(app => app.status === 'Interview').length,
+          offers: monthApps.filter(app => app.status === 'Offer').length,
+          rejected: monthApps.filter(app => app.status === 'Rejected').length,
         });
       }
 
@@ -64,19 +74,21 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
     } else {
       // All Time: Group by Year
-      const allTimeData: { [key: string]: { applications: number; interviews: number; offers: number } } = {};
+      const allTimeData: { [key: string]: { applications: number; interviews: number; offers: number; rejected: number; applied: number } } = {};
 
       applications.forEach(app => {
         const appDate = new Date(app.date);
         const year = appDate.getFullYear().toString();
 
         if (!allTimeData[year]) {
-          allTimeData[year] = { applications: 0, interviews: 0, offers: 0 };
+          allTimeData[year] = { applications: 0, interviews: 0, offers: 0, rejected: 0, applied: 0 };
         }
 
         allTimeData[year].applications++;
-        if (app.status === 'interview') allTimeData[year].interviews++;
-        if (app.status === 'offer') allTimeData[year].offers++;
+        if (app.status === 'Interview') allTimeData[year].interviews++;
+        if (app.status === 'Offer') allTimeData[year].offers++;
+        if (app.status === 'Rejected') allTimeData[year].rejected++;
+        if (app.status === 'Applied') allTimeData[year].applied++;
       });
 
       const sortedData = Object.entries(allTimeData)
@@ -92,8 +104,10 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
         filledData.push({
           name: `_placeholder_${filledData.length}`,
           applications: 0,
+          applied: 0,
           interviews: 0,
           offers: 0,
+          rejected: 0,
         });
       }
 
@@ -249,6 +263,11 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                               <span>{entry.name}: {entry.value}</span>
                             </div>
                           ))}
+                          {isMobile && payload[0]?.payload && (
+                            <div className="flex items-center gap-2 text-sm text-gray-900 dark:text-white font-medium border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
+                              <span>Total Applications: {payload[0].payload.applications}</span>
+                            </div>
+                          )}
                         </div>
                       );
                     }
@@ -256,10 +275,22 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                   }}
                   cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                 />
-                <Legend wrapperStyle={{ fontSize: '12px' }} iconType="square" />
-                <Bar dataKey="applications" fill="#3b82f6" name="Total Applications" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="interviews" fill="#eab308" name="Interviews" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="offers" fill="#22c55e" name="Offers" radius={[4, 4, 0, 0]} />
+                <Legend wrapperStyle={{ fontSize: '12px' }} iconType="circle" />
+                {isMobile ? (
+                  <>
+                    <Bar dataKey="applied" stackId="a" fill={COLORS.Applied} name="Applied" radius={[0, 0, 4, 4]} />
+                    <Bar dataKey="interviews" stackId="a" fill={COLORS.Interview} name="Interview" />
+                    <Bar dataKey="rejected" stackId="a" fill={COLORS.Rejected} name="Rejected" />
+                    <Bar dataKey="offers" stackId="a" fill={COLORS.Offer} name="Offer" radius={[4, 4, 0, 0]} />
+                  </>
+                ) : (
+                  <>
+                    <Bar dataKey="applications" fill="#3b82f6" name="Total Applications" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="interviews" fill={COLORS.Interview} name="Interview" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="rejected" fill={COLORS.Rejected} name="Rejected" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="offers" fill={COLORS.Offer} name="Offer" radius={[4, 4, 0, 0]} />
+                  </>
+                )}
               </BarChart>
             </ResponsiveContainer>
 
