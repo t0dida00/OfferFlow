@@ -358,3 +358,23 @@
         color: #fff;
     }
 }
+
+@media (max-width: 480px) {
+    .login-page-body {
+        padding: 10px;
+    }
+
+    .auth-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none;
+    }
+
+    .auth-wrapper form {
+        padding: 20px 10px;
+    }
+
+    .auth-wrapper h1 {
+        font-size: 24px;
+    }
+}

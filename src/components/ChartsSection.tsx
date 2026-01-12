@@ -182,20 +182,21 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[756px]" style={{ height: '422px' }}>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[756px]" style={{ minHeight: '422px' }}>
       {/* Applications Over Time - Bar Chart */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6" >
         {applications.length === 0 ?
           <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
             <p className="text-xl font-medium">No data</p>
           </div> : <>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
               <div>
                 <h3 className="text-lg font-semibold">Applications Over Time</h3>
                 <p className="text-sm font-medium opacity-70">{chartLabel}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 opacity-70" />
+
 
                 {timeRange === 'annually' && (
                   <select
@@ -271,13 +272,14 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
             <p className="text-xl font-medium">No data</p>
           </div> : <>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
               <div>
                 <h3 className="text-lg font-semibold">Status Distribution</h3>
                 <p className="text-sm font-medium opacity-70">{pieLabel}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 opacity-70" />
+
 
                 {pieTimeRange === 'annually' && (
                   <select

@@ -59,11 +59,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow">
                 <Briefcase className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-xl font-bold dark:text-white">JobTracker Pro</h1>
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold dark:text-white truncate">JobTracker Pro</h1>
                 <p className="text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                  <Mail className="w-3 h-3" />
-                  {user?.email}
+                  <Mail className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate max-w-[120px] sm:max-w-none">{user?.email}</span>
                 </p>
               </div>
             </div>
