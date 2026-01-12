@@ -260,10 +260,10 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
                       className="px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+                        <span className=" dark:text-gray-400 font-medium whitespace-nowrap">
                           #{globalIndex} {app.company}
                         </span>
-                        <span className={`inline-flex items-center px-2.5 py-2.5 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
                           <span className={`w-1 h-1 rounded-full ${style.dot}`}></span>
                           {app.status}
                         </span>

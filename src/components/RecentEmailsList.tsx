@@ -78,7 +78,7 @@ export function RecentEmailsList() {
                                 ) : (
                                     <div className="mb-2">
                                         <div className="flex justify-between items-center mb-1">
-                                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
+                                            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
                                                 {email.status}
                                             </span>
                                             <span className="text-xs opacity-70">
