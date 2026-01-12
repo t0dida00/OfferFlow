@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Mail, RefreshCw } from 'lucide-react';
 import { fetchEmails, syncGmail } from '../services/api';
@@ -11,7 +12,14 @@ const statusColors: Record<string, string> = {
 };
 
 export function RecentEmailsList() {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
     const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 600);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     const { data: rawEmails, isLoading } = useQuery({
         queryKey: ['emails'],
         queryFn: fetchEmails,
@@ -53,19 +61,35 @@ export function RecentEmailsList() {
                                 className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group"
                                 onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${email.emailId}`, '_blank')}
                             >
-                                <div className="flex justify-between items-center mb-1">
-                                    <div className="flex items-center gap-2 min-w-0">
+                                {!isMobile ? (
+                                    <div className="flex justify-between items-center mb-1">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <h4 className="font-semibold text-gray-900 dark:text-white truncate">
+                                                {email.subject}
+                                            </h4>
+                                            <span className={`font-semibold px-2.5 py-1 rounded-full shrink-0 ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
+                                                {email.status}
+                                            </span>
+                                        </div>
+                                        <span className="whitespace-nowrap ml-4 opacity-70 shrink-0">
+                                            {new Date(email.date).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="mb-2">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
+                                                {email.status}
+                                            </span>
+                                            <span className="text-xs opacity-70">
+                                                {new Date(email.date).toLocaleDateString()}
+                                            </span>
+                                        </div>
                                         <h4 className="font-semibold text-gray-900 dark:text-white truncate">
                                             {email.subject}
                                         </h4>
-                                        <span className={`font-semibold px-2.5 py-1 rounded-full shrink-0 ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
-                                            {email.status}
-                                        </span>
                                     </div>
-                                    <span className="whitespace-nowrap ml-4 opacity-70 shrink-0">
-                                        {new Date(email.date).toLocaleDateString()}
-                                    </span>
-                                </div>
+                                )}
 
                                 <p className="line-clamp-2 opacity-70">
                                     {email.snippet}

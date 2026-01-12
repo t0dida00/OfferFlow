@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { Application } from '../types';
 import { ApplicationDetailsModal } from './ApplicationDetailsModal';
@@ -28,7 +28,15 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { mutate: handleUpdateApp } = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Application> }) => updateApplication(id, data),
@@ -85,6 +93,11 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
     setCurrentPage(page);
   };
 
+  const toggleRow = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
       {/* Header */}
@@ -121,111 +134,169 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-            <tr>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('_id')}
-                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  ID
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('company')}
-                  className="flex items-center gap-1 font-medium uppercase tracking-wider hover:opacity-70 text-gray-500 dark:text-gray-400"
-                >
-                  Company
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('role')}
-                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  Role
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('location')}
-                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  Location
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('date')}
-                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  Date Applied
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-              <th className="px-6 py-3 text-left">
-                <button
-                  onClick={() => handleSort('status')}
-                  className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  Result
-                  <ArrowUpDown className="w-3 h-3" />
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredApplications.length === 0 ? (
+      {!isMobile ? (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                  No applications found
-                </td>
-              </tr>
-            ) : (
-              paginatedApplications.map((app) => {
-                const style = resultStyles[app.status] || resultStyles.Applied;
-                return (
-                  <tr
-                    key={app._id}
-                    onClick={() => setSelectedApp(app)}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('_id')}
+                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      #{app._id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900 dark:text-white">{app.company}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-gray-900 dark:text-gray-300">{app.role}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
-                      {app.location}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
-                      {new Date(app.date).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium ${style.bg} ${style.text}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
-                        {app.status}
-                      </span>
-                    </td>
-                  </tr>
+                    ID
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('company')}
+                    className="flex items-center gap-1 font-medium uppercase tracking-wider hover:opacity-70 text-gray-500 dark:text-gray-400"
+                  >
+                    Company
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('role')}
+                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  >
+                    Role
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('location')}
+                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  >
+                    Location
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('date')}
+                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  >
+                    Applied
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+                <th className="px-6 py-3 text-left">
+                  <button
+                    onClick={() => handleSort('status')}
+                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
+                  >
+                    Result
+                    <ArrowUpDown className="w-3 h-3" />
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredApplications.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                    No applications found
+                  </td>
+                </tr>
+              ) : (
+                paginatedApplications.map((app, index) => {
+                  const style = resultStyles[app.status] || resultStyles.Applied;
+                  return (
+                    <tr
+                      key={app._id}
+                      onClick={() => setSelectedApp(app)}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        #{index + 1}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="font-medium text-gray-900 dark:text-white">{app.company}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-gray-900 dark:text-gray-300">{app.role}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
+                        {app.location}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
+                        {new Date(app.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium ${style.bg} ${style.text}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
+                          {app.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        /* Mobile Accordion Layout (visible < 600px) */
+        <div>
+          {filteredApplications.length === 0 ? (
+            <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+              No applications found
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {paginatedApplications.map((app, index) => {
+                const isExpanded = expandedRows[app._id];
+                const style = resultStyles[app.status] || resultStyles.Applied;
+                const globalIndex = startIndex + index + 1;
+
+                return (
+                  <div key={app._id} className="bg-white dark:bg-gray-800">
+                    <div
+                      onClick={(e) => toggleRow(app._id, e)}
+                      className="px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+                          #{globalIndex} {app.company}
+                        </span>
+                        <span className={`inline-flex items-center px-2.5 py-2.5 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
+                          <span className={`w-1 h-1 rounded-full ${style.dot}`}></span>
+                          {app.status}
+                        </span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                      )}
+                    </div>
+
+                    {isExpanded && (
+                      <div
+                        className="px-4 pb-4 animate-in slide-in-from-top-1 duration-200"
+                        onClick={() => setSelectedApp(app)}
+                      >
+                        <div className="rounded-lg p-4 text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:opacity-80 transition-opacity">
+                          <div className="font-mono text-xs text-gray-400 mb-1">ID: {app._id}</div>
+                          <div className="flex flex-col gap-y-1 ">
+                            <span className="font-semibold text-gray-900 dark:text-white">{app.role}</span>
+                            <span>{app.location}</span>
+                            <span>{new Date(app.date).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
