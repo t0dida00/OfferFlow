@@ -2,31 +2,35 @@ import { useState } from 'react';
 import './LoginPage.css';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const BACKEND_URL = "http://localhost:8080/api/v1/auth/google";
-
+const BACKEND_GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
 export function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
 
+  // const loginWithGoogle = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   const params = new URLSearchParams({
+  //     client_id: GOOGLE_CLIENT_ID,
+  //     redirect_uri: `${BACKEND_URL}`,
+  //     response_type: "code",
+  //     scope: [
+  //       "openid",
+  //       "email",
+  //       "profile",
+  //       "https://www.googleapis.com/auth/gmail.readonly"
+  //     ].join(" "),
+  //     access_type: "offline",
+  //     prompt: "consent"
+  //   });
+
+  //   window.location.href =
+  //     `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  // };
   const loginWithGoogle = (e: React.MouseEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams({
-      client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: `${BACKEND_URL}`,
-      response_type: "code",
-      scope: [
-        "openid",
-        "email",
-        "profile",
-        "https://www.googleapis.com/auth/gmail.readonly"
-      ].join(" "),
-      access_type: "offline",
-      prompt: "consent"
-    });
 
-    window.location.href =
-      `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+    // 🔐 Frontend only redirects to backend
+    window.location.href = BACKEND_GOOGLE_AUTH_URL;
   };
-
   return (
     <div className="login-page-body">
       <div className={`auth-wrapper ${isSignUp ? "panel-active" : ""}`} id="authWrapper">
