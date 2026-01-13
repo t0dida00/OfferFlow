@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Mail, RefreshCw } from 'lucide-react';
+import { Mail, RefreshCw, ArrowRight } from 'lucide-react';
 import { fetchEmails } from '../services/api';
 import { Email } from '../types';
 
@@ -14,13 +14,16 @@ const statusColors: Record<string, string> = {
 interface RecentEmailsListProps {
     onSync: () => void;
     isSyncing: boolean;
+    limit?: number;
+    className?: string;
+    onViewAll?: () => void;
 }
 
-export function RecentEmailsList({ onSync, isSyncing }: RecentEmailsListProps) {
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+export function RecentEmailsList({ onSync, isSyncing, limit, className, onViewAll }: RecentEmailsListProps) {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 767);
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 600);
+        const handleResize = () => setIsMobile(window.innerWidth < 767);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
@@ -30,16 +33,37 @@ export function RecentEmailsList({ onSync, isSyncing }: RecentEmailsListProps) {
         queryFn: fetchEmails,
     });
 
-    const emails: Email[] = rawEmails?.data || [];
+    const allEmails: Email[] = rawEmails?.data || [];
+    // Sort emails by date descending (newest first)
+    const sortedEmails = [...allEmails].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const emails = limit ? sortedEmails.slice(0, limit) : sortedEmails;
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col h-[600px]">
-            <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                <h2 className="text-xl font-bold flex items-center gap-2">
-                    <Mail className="w-5 h-5" />
-                    Recent Related Emails
-                </h2>
-                <p className="mt-1 opacity-70">Last 20 emails</p>
+        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col ${className || 'h-[600px]'}`}>
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <div>
+                    <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                        <Mail className="w-5 h-5" />
+                        Recent Related Emails
+                    </h2>
+                    {limit ? (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1 ml-7">
+                            Last {limit} items
+                        </p>
+                    ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1 ml-7">
+                            Total {emails.length} emails
+                        </p>
+                    )}
+                </div>
+                {onViewAll && (
+                    <button
+                        onClick={onViewAll}
+                        className="flex items-center gap-2 rounded-lg btn-primary"
+                    >
+                        View All <ArrowRight className="w-4 h-4" />
+                    </button>
+                )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-0">

@@ -1,0 +1,17 @@
+.last-sync-desktop {
+    display: none;
+}
+
+.last-sync-mobile {
+    display: flex;
+}
+
+@media (min-width: 950px) {
+    .last-sync-desktop {
+        display: flex;
+    }
+
+    .last-sync-mobile {
+        display: none;
+    }
+}

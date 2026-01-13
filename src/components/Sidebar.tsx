@@ -8,6 +8,7 @@ import {
     User as UserIcon
 } from 'lucide-react';
 import { User } from '../types';
+import './Sidebar.css';
 
 interface SidebarProps {
     user: User | null;
@@ -60,7 +61,7 @@ export function Sidebar({
     return (
         <div
             className={`
-        bg-white dark:bg-gray-800 flex flex-col w-72
+        bg-white dark:bg-gray-800 flex flex-col sidebar-container
         h-screen sticky top-0 border border-r border-[#232F3F] dark:border-gray-800
       `}
         >
@@ -92,33 +93,44 @@ export function Sidebar({
             </nav>
 
             {/* Footer / User Profile */}
-            <div className="p-6 border-t border-gray-50 dark:border-gray-800">
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 flex items-center justify-center border border-blue-200 dark:border-blue-700">
-                            <UserIcon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
-                        </div>
-                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+            <div className="p-6 border-t border-gray-50 dark:border-gray-800 w-full min-w-0 flex items-center gap-3">
+                <div className="relative">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 flex items-center justify-center border border-blue-200 dark:border-blue-700">
+                        <UserIcon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
                     </div>
-
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                            {user?.name || 'User'}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                            @{user?.email?.split('@')[0]}
-                        </p>
-                    </div>
-
-                    <button
-                        onClick={onLogout}
-                        className="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                        title="Logout"
-                    >
-                        <LogOut className="w-5 h-5" />
-                    </button>
+                    <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
                 </div>
+
+                <div className="flex-1 min-w-0 w-0 overflow-hidden">
+                    <p
+                        className="text-sm font-semibold text-gray-900 dark:text-white truncate cursor-default"
+                        title={user?.name || 'User'}
+                    >
+                        {user?.name || 'User'}
+                    </p>
+                    <p
+                        className="text-xs text-gray-500 dark:text-gray-400 truncate cursor-default"
+                        title={user?.email || ''}
+                        style={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '140px'
+                        }}
+                    >
+                        {user?.email || ''}
+                    </p>
+                </div>
+
+                <button
+                    onClick={onLogout}
+                    className="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    title="Logout"
+                >
+                    <LogOut className="w-5 h-5" />
+                </button>
             </div>
         </div>
+
     );
 }

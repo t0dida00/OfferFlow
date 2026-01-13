@@ -9,9 +9,11 @@ import { ApplicationsTable } from './ApplicationsTable';
 import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
 import { RecentEmailsList } from './RecentEmailsList';
+import { RecentApplicationsList } from './RecentApplicationsList';
 import { Sidebar } from './Sidebar';
 import { fetchApplications, syncGmail } from '../services/api';
 import { User } from '../types';
+import './Dashboard.css';
 
 
 interface DashboardProps {
@@ -52,31 +54,40 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'overview':
         return (
           <div className="space-y-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Overview</h2>
-              <div className="flex items-center gap-3">
-                {lastSync && (
-                  <div className=" flex flex-row items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <Calendar className="w-4 h-4" />
-                    <span>Last sync: {lastSync.toLocaleString()}</span>
-                  </div>
-                )}
-                <button
-                  onClick={handleGmailSync}
-                  disabled={isSyncing}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors disabled:opacity-50"
-                >
-                  <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                  <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
-                </button>
-                <button
-                  onClick={() => setIsAddModalOpen(true)}
-                  className="flex items-center gap-2 rounded-lg btn-primary"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span className="hidden sm:inline">Add Application</span>
-                </button>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Overview</h2>
+                <div className="flex items-center gap-3">
+                  {lastSync && (
+                    <div className="last-sync-desktop flex-row items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <Calendar className="w-4 h-4" />
+                      <span>Last sync: {lastSync.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={handleGmailSync}
+                    disabled={isSyncing}
+                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+                  </button>
+                  <button
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="flex items-center gap-2 rounded-lg btn-primary"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span className="hidden sm:inline">Add Application</span>
+                  </button>
+                </div>
               </div>
+
+              {lastSync && (
+                <div className="last-sync-mobile flex-row items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 w-full">
+                  <Calendar className="w-4 h-4" />
+                  <span>Last sync: {lastSync.toLocaleString()}</span>
+                </div>
+              )}
             </div>
 
             {applications.length === 0 ? (
@@ -93,7 +104,26 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 </button>
               </div>
             ) : (
-              <ChartsSection applications={applications} />
+              <>
+                <ChartsSection applications={applications} />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                  {/* Recent Applications List */}
+                  <RecentApplicationsList
+                    applications={applications}
+                    onViewAll={() => setCurrentView('applications')}
+                  />
+
+                  {/* Recent Emails List */}
+                  <RecentEmailsList
+                    onSync={handleGmailSync}
+                    isSyncing={isSyncing}
+                    limit={5}
+                    className="h-full"
+                    onViewAll={() => setCurrentView('emails')}
+                  />
+                </div>
+              </>
             )}
           </div>
         );

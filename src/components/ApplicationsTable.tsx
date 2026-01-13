@@ -29,11 +29,12 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 767);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    const handleResize = () => setIsMobile(window.innerWidth < 767);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

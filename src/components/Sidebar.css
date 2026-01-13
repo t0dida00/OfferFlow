@@ -1,0 +1,20 @@
+.sidebar-container {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+    flex-shrink: 0;
+}
+
+.sidebar-footer-content {
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sidebar-text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+}
