@@ -1,0 +1,197 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.charts-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-6;
+    // height: 756px;
+    min-height: 422px;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__card {
+        background-color: $white;
+        border-radius: $rounded-xl;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // shadow-sm
+        border: 1px solid $gray-200;
+        padding: $spacing-4;
+        display: flex;
+        flex-direction: column;
+
+        @media (min-width: 640px) {
+            padding: $spacing-6;
+        }
+
+        @include dark {
+            background-color: $gray-800;
+            border-color: $gray-700;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        &-text {
+            font-size: $text-xl;
+            font-weight: 500;
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacing-6;
+        gap: $spacing-4;
+
+        @media (min-width: 640px) {
+            flex-direction: row;
+        }
+    }
+
+    &__title-group {
+        text-align: center;
+
+        @media (min-width: 640px) {
+            text-align: left;
+        }
+    }
+
+    &__title {
+        font-size: $text-lg;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    &__controls {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+    }
+
+    &__icon {
+        width: 1rem;
+        height: 1rem;
+        opacity: 0.7;
+    }
+
+    &__select {
+        font-size: $text-sm;
+        border: 1px solid $gray-300;
+        border-radius: $rounded-lg;
+        padding: 0.375rem $spacing-3; // py-1.5 px-3
+        background-color: $white;
+        color: $gray-900;
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px $blue-500;
+            border-color: transparent;
+        }
+
+        @include dark {
+            border-color: $gray-600;
+            background-color: $gray-700;
+            color: $white;
+        }
+    }
+
+    &__tooltip {
+        background-color: $white;
+        border: 1px solid $gray-200;
+        border-radius: $rounded-lg;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        padding: $spacing-3;
+
+        @include dark {
+            background-color: $gray-800;
+            border-color: $gray-700;
+        }
+    }
+
+    &__tooltip-label {
+        font-size: $text-sm;
+        font-weight: 600;
+        margin-bottom: $spacing-2;
+    }
+
+    &__tooltip-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        font-size: $text-sm;
+        color: $gray-600;
+
+        @include dark {
+            color: $gray-300;
+        }
+    }
+
+    &__tooltip-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: $rounded-full;
+    }
+
+    &__tooltip-total {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        font-size: $text-sm;
+        font-weight: 500;
+        color: $gray-900;
+        border-top: 1px solid $gray-100;
+        margin-top: $spacing-2;
+        padding-top: $spacing-2;
+
+        @include dark {
+            color: $white;
+            border-top-color: $gray-700;
+        }
+    }
+
+    &__center-label-text {
+        fill: $gray-500;
+        opacity: 0.7;
+
+        @include dark {
+            fill: $gray-400;
+        }
+    }
+
+    &__center-label-value {
+        font-size: $text-xl;
+        font-weight: 600;
+        fill: $gray-900;
+
+        @include dark {
+            fill: $white;
+        }
+    }
+
+    &__grid {
+        stroke: #f0f0f0;
+
+        @include dark {
+            stroke: $gray-700;
+        }
+    }
+
+    &__axis {
+        :global(.recharts-cartesian-axis-tick-value) {
+            fill: $gray-500;
+            font-size: 12px;
+
+            @include dark {
+                fill: $gray-400;
+            }
+        }
+    }
+}

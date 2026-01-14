@@ -3,6 +3,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Calendar } from 'lucide-react';
 
 import { Application } from '../types';
+import styles from './ChartsSection.module.scss';
+
 
 interface ChartsSectionProps {
   applications: Application[];
@@ -175,7 +177,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           y={cy - 6}
           textAnchor="middle"
           dominantBaseline="central"
-          style={{ fill: 'var(--main-text-color)', opacity: 0.7 }}
+          className={styles['charts-section__center-label-text']}
         >
           Total
         </text>
@@ -184,8 +186,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
           y={cy + 12}
           textAnchor="middle"
           dominantBaseline="central"
-          className="text-xl font-semibold"
-          style={{ fill: 'var(--main-text-color)' }}
+          className={styles['charts-section__center-label-value']}
         >
           {pieData.length}
         </text>
@@ -196,27 +197,27 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[756px]" style={{ minHeight: '422px' }}>
+    <div className={styles['charts-section']}>
       {/* Applications Over Time - Bar Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6" >
+      <div className={styles['charts-section__card']}>
         {applications.length === 0 ?
-          <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
-            <p className="text-xl font-medium">No data</p>
+          <div className={styles['charts-section__empty']}>
+            <p className={styles['charts-section__empty-text']}>No data</p>
           </div> : <>
-            <div className="flex flex-col items-center sm:flex-row sm:items-center justify-between mb-6 gap-4">
-              <div className="text-center sm:text-left">
-                <h3 className="text-lg font-semibold">Applications Over Time</h3>
+            <div className={styles['charts-section__header']}>
+              <div className={styles['charts-section__title-group']}>
+                <h3 className={styles['charts-section__title']}>Applications Over Time</h3>
                 {/* <p className="text-sm font-medium opacity-70">{chartLabel}</p> */}
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 opacity-70" />
+              <div className={styles['charts-section__controls']}>
+                <Calendar className={styles['charts-section__icon']} />
 
 
                 {timeRange === 'annually' && (
                   <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(Number(e.target.value))}
-                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className={styles['charts-section__select']}
                   >
                     {availableYears.map(year => (
                       <option key={year} value={year}>{year}</option>
@@ -227,7 +228,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value as TimeRange)}
-                  className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className={styles['charts-section__select']}
                 >
                   <option value="annually">Annually</option>
                   <option value="all">All Time</option>
@@ -237,34 +238,36 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
 
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" className="dark:stroke-gray-700" />
+                <CartesianGrid strokeDasharray="3 3" className={styles['charts-section__grid']} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: 'var(--main-text-color)', fontSize: 12 }}
+                  className={styles['charts-section__axis']}
                   tickFormatter={(value) => value.startsWith('_placeholder_') ? '' : value}
+                  tick={{ fontSize: 12 }}
                 />
                 <YAxis
-                  tick={{ fill: 'var(--main-text-color)', fontSize: 12 }}
+                  className={styles['charts-section__axis']}
                   domain={[0, 'auto']}
                   interval={0}
                   width={30}
                   allowDecimals={false}
                   tickFormatter={(value) => Math.floor(value).toString()}
+                  tick={{ fontSize: 12 }}
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length && !label.toString().startsWith('_placeholder_')) {
                       return (
-                        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3">
-                          <p className="text-sm font-semibold mb-2">{label}</p>
+                        <div className={styles['charts-section__tooltip']}>
+                          <p className={styles['charts-section__tooltip-label']}>{label}</p>
                           {payload.map((entry: any, index: number) => (
-                            <div key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <div key={index} className={styles['charts-section__tooltip-item']}>
+                              <div className={styles['charts-section__tooltip-dot']} style={{ backgroundColor: entry.color }} />
                               <span>{entry.name}: {entry.value}</span>
                             </div>
                           ))}
                           {isMobile && payload[0]?.payload && (
-                            <div className="flex items-center gap-2 text-sm text-gray-900 dark:text-white font-medium border-t border-gray-100 dark:border-gray-700 mt-2 pt-2">
+                            <div className={styles['charts-section__tooltip-total']}>
                               <span>Total Applications: {payload[0].payload.applications}</span>
                             </div>
                           )}
@@ -299,25 +302,25 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
       </div>
 
       {/* Status Distribution - Pie Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 h-[756px]">
+      <div className={styles['charts-section__card']}>
         {applications.length === 0 ?
-          <div className="flex items-center justify-center h-full" style={{ height: '100%' }}>
-            <p className="text-xl font-medium">No data</p>
+          <div className={styles['charts-section__empty']}>
+            <p className={styles['charts-section__empty-text']}>No data</p>
           </div> : <>
-            <div className="flex flex-col items-center sm:flex-row sm:items-center justify-between mb-6 gap-4">
-              <div className="text-center sm:text-left">
-                <h3 className="text-lg font-semibold">Status Distribution</h3>
+            <div className={styles['charts-section__header']}>
+              <div className={styles['charts-section__title-group']}>
+                <h3 className={styles['charts-section__title']}>Status Distribution</h3>
                 {/* <p className="text-sm font-medium opacity-70">{pieLabel}</p> */}
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 opacity-70" />
+              <div className={styles['charts-section__controls']}>
+                <Calendar className={styles['charts-section__icon']} />
 
 
                 {pieTimeRange === 'annually' && (
                   <select
                     value={pieSelectedYear}
                     onChange={(e) => setPieSelectedYear(Number(e.target.value))}
-                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className={styles['charts-section__select']}
                   >
                     {availableYears.map(year => (
                       <option key={year} value={year}>{year}</option>
@@ -328,7 +331,7 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                 <select
                   value={pieTimeRange}
                   onChange={(e) => setPieTimeRange(e.target.value as TimeRange)}
-                  className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className={styles['charts-section__select']}
                 >
                   <option value="annually">Annually</option>
                   <option value="all">All Time</option>
@@ -355,12 +358,22 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
                   <Label content={<CenterLabel />} />
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className={styles['charts-section__tooltip']}>
+                          {payload.map((entry: any, index: number) => (
+                            <div key={index} className={styles['charts-section__tooltip-item']}>
+                              <div className={styles['charts-section__tooltip-dot']} style={{ backgroundColor: entry.payload.fill || entry.color }} />
+                              <span>{entry.name}: {entry.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
+                  cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                 />
                 <Legend verticalAlign="bottom" height={36} iconType="square" />
               </PieChart>
