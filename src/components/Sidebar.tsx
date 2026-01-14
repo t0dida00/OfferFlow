@@ -8,7 +8,7 @@ import {
     User as UserIcon
 } from 'lucide-react';
 import { User } from '../types';
-import './Sidebar.css';
+import styles from './Sidebar.module.scss';
 
 interface SidebarProps {
     user: User | null;
@@ -41,17 +41,10 @@ export function Sidebar({
         return (
             <button
                 onClick={() => onNavigate(item.id)}
-                className={`
-          w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 group relative cursor-pointer
-          ${isActive
-                        ? 'font-bold'
-                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white'}
-        `}
-                style={isActive ? { backgroundColor: 'var(--btn-bg)', color: 'var(--btn-text)' } : undefined}
+                className={`${styles['sidebar__nav-item']} ${isActive ? styles['sidebar__nav-item--active'] : ''}`}
             >
                 <Icon
-                    className={`w-[22px] h-[22px] stroke-[1.5px] flex-shrink-0 ${isActive ? '' : 'text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white'}`}
-                    style={isActive ? { color: 'var(--btn-text)' } : undefined}
+                    className={styles['sidebar__nav-icon']}
                 />
                 <span className="whitespace-nowrap">{item.label}</span>
             </button>
@@ -59,32 +52,27 @@ export function Sidebar({
     };
 
     return (
-        <div
-            className={`
-        bg-white dark:bg-gray-800 flex flex-col sidebar-container
-        h-screen sticky top-0 border border-r border-[#232F3F] dark:border-gray-800
-      `}
-        >
+        <div className={styles.sidebar}>
             {/* Header / Logo */}
-            <div className="h-24 flex items-center p-6 border-b border-[#232F3F]  mb-4">
-                <h1 className="text-2xl font-bold tracking-tight text-[#232F3F] dark:text-white ">
+            <div className={styles.sidebar__header}>
+                <h1 className={styles.sidebar__title}>
                     OFFERFLOW
                 </h1>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-4 space-y-12 overflow-y-auto ">
-                <div className="space-y-2">
+            <nav className={styles.sidebar__nav}>
+                <div className={styles['sidebar__nav-group']}>
                     {mainNavItems.map((item) => (
                         <NavItem key={item.id} item={item} />
                     ))}
                 </div>
 
-                <div className="space-y-2">
-                    <div className="px-4 py-4 text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                <div className={styles['sidebar__nav-group']}>
+                    <div className={styles['sidebar__nav-label']}>
                         Support
                     </div>
-                    <div className="space-y-2">
+                    <div className={styles['sidebar__nav-group']}>
                         {supportNavItems.map((item) => (
                             <NavItem key={item.id} item={item} />
                         ))}
@@ -93,30 +81,24 @@ export function Sidebar({
             </nav>
 
             {/* Footer / User Profile */}
-            <div className="p-6 border-t border-gray-50 dark:border-gray-800 w-full min-w-0 flex items-center gap-3">
-                <div className="relative">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 flex items-center justify-center border border-blue-200 dark:border-blue-700">
-                        <UserIcon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+            <div className={styles.sidebar__footer}>
+                <div className={styles['sidebar__user-avatar-container']}>
+                    <div className={styles['sidebar__user-avatar']}>
+                        <UserIcon className={styles['sidebar__user-icon']} />
                     </div>
-                    <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    <div className={styles['sidebar__status-dot']}></div>
                 </div>
 
-                <div className="flex-1 min-w-0 w-0 overflow-hidden">
+                <div className={styles['sidebar__user-info']}>
                     <p
-                        className="text-sm font-semibold text-gray-900 dark:text-white truncate cursor-default"
+                        className={styles['sidebar__user-name']}
                         title={user?.name || 'User'}
                     >
                         {user?.name || 'User'}
                     </p>
                     <p
-                        className="text-xs text-gray-500 dark:text-gray-400 truncate cursor-default"
+                        className={styles['sidebar__user-email']}
                         title={user?.email || ''}
-                        style={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            maxWidth: '140px'
-                        }}
                     >
                         {user?.email || ''}
                     </p>
@@ -124,10 +106,10 @@ export function Sidebar({
 
                 <button
                     onClick={onLogout}
-                    className="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    className={styles['sidebar__logout-btn']}
                     title="Logout"
                 >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className={styles['sidebar__logout-icon']} />
                 </button>
             </div>
         </div>
