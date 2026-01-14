@@ -90,12 +90,12 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              // <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <Dashboard
-                user={user}
-                onLogout={handleLogout}
-              />
-              // </ProtectedRoute>
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <Dashboard
+                  user={user}
+                  onLogout={handleLogout}
+                />
+              </ProtectedRoute>
             }
           />
         </Routes>
