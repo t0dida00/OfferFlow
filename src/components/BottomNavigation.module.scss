@@ -1,0 +1,113 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: $white;
+  border-top: 1px solid #e7e8ea;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 50;
+  padding: 0 $spacing-2;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+
+  @include dark {
+    background-color: $gray-800;
+    border-top-color: $gray-700;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-1;
+    padding: $spacing-2;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $gray-500;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 64px;
+
+    &:hover {
+      color: $gray-900;
+    }
+
+    @include dark {
+      color: $gray-400;
+
+      &:hover {
+        color: $white;
+      }
+    }
+
+    &--active {
+      color: #232F3F;
+      font-weight: 600;
+
+      @include dark {
+        color: $white;
+      }
+
+      .bottomNav__icon {
+        color: #232F3F;
+
+        @include dark {
+          color: $white;
+        }
+      }
+    }
+
+    &--add {
+      .bottomNav__icon {
+        width: 24px;
+        height: 24px;
+        padding: $spacing-1;
+        background-color: $gray-200;
+        border-radius: $rounded-lg;
+        color: $gray-600;
+
+        @include dark {
+          background-color: $gray-700;
+          color: $gray-300;
+        }
+      }
+
+      &.bottomNav__item--active .bottomNav__icon {
+        background-color: #232F3F;
+        color: $white;
+
+        @include dark {
+          background-color: $white;
+          color: #232F3F;
+        }
+      }
+    }
+  }
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  &__label {
+    font-size: 0.625rem; // 10px
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+}
+

@@ -6,12 +6,36 @@
     display: flex;
 }
 
-@media (min-width: 950px) {
+/* Tablet and Desktop: > 767px */
+@media (min-width: 768px) {
     .last-sync-desktop {
         display: flex;
     }
 
     .last-sync-mobile {
         display: none;
+    }
+}
+
+/* Ensure sidebar is hidden on mobile even if conditional rendering fails */
+.mobile-view .sidebar {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
     }
 }

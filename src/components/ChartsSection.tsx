@@ -30,10 +30,10 @@ export function ChartsSection({ applications }: ChartsSectionProps) {
   const [pieTimeRange, setPieTimeRange] = useState<TimeRange>('annually');
   const [pieSelectedYear, setPieSelectedYear] = useState<number>(currentYear);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 640); // 640px is sm breakpoint
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 767); // Mobile: <= 767px
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth <= 767);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
