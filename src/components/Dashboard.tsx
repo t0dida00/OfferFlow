@@ -233,13 +233,17 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
               {onToggleTheme && isMobile && (
                 <button
                   onClick={onToggleTheme}
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-all hover:scale-110 group"
+                  className="flex items-center justify-center w-12 h-12 rounded-full shadow-lg border transition-all hover:scale-110 group"
                   aria-label="Toggle theme"
+                  style={{
+                    backgroundColor: isDarkMode ? '#FFF' : '#232F3F',
+                    borderColor: isDarkMode ? '#232F3F' : '#FFF'
+                  }}
                 >
                   {isDarkMode ? (
-                    <Sun className="w-5 h-5 text-yellow-500 group-hover:rotate-180 transition-transform duration-300" />
+                    <Sun className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
                   ) : (
-                    <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:rotate-12 transition-transform duration-300" />
+                    <Moon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
                   )}
                 </button>
               )}
