@@ -1,3 +1,8 @@
+/* CSS Variable for Bottom Bar Height (Best Practice) */
+:root {
+    --bottom-bar-height: 64px;
+}
+
 .last-sync-desktop {
     display: none;
 }
@@ -37,5 +42,141 @@
         opacity: 0 !important;
         position: absolute !important;
         left: -9999px !important;
+    }
+}
+
+/* Fix overflow for <= 1050px */
+@media (max-width: 1050px) {
+    main {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    /* Ensure no horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+    
+    /* Prevent content from overflowing */
+    .space-y-8 > * {
+        max-width: 100%;
+    }
+}
+
+/* Fix create button size on mobile */
+@media (max-width: 768px) {
+    .overview-add-btn {
+        padding: 0.5rem !important;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .overview-sync-btn {
+        padding: 0.5rem !important;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Hide button text on mobile < 440px, show only icons */
+@media (max-width: 440px) {
+    .overview-sync-text,
+    .overview-add-text {
+        display: none !important;
+    }
+    
+    .overview-sync-btn,
+    .overview-add-btn {
+        padding: 0.5rem !important;
+        min-width: 2.5rem;
+    }
+}
+
+/* Move heading text in by 1-2px */
+@media (max-width: 1024px) {
+    h2.text-xl,
+    h2.text-2xl {
+        padding-left: 2px;
+    }
+}
+
+/* Responsive Grid Utility - Auto-fit with minmax (Tối ưu nhất) */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1.5rem;
+}
+
+.responsive-grid-sm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.responsive-grid-lg {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Responsive Flex Utility - Flex-wrap (Tối ưu nhất) */
+.responsive-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.responsive-flex-header {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Fix Overview text responsive - luôn nằm cùng hàng */
+.responsive-flex-header h2 {
+    text-align: left;
+    flex: 0 0 auto;
+    min-width: 0;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.responsive-flex-header > div:not(:first-child) {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+/* Grid item must have min-width: 0 to prevent overflow */
+.responsive-grid > *,
+.responsive-grid-sm > *,
+.responsive-grid-lg > * {
+    min-width: 0;
+}
+
+/* Fix Bottom Navigation Bar Overlap - CHUẨN */
+/* Main content padding for bottom bar (chỉ khi có bottom nav - mobile/tablet) */
+@media (max-width: 1024px) {
+    main {
+        padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px));
+    }
+    
+    /* Scroll containers padding for bottom bar */
+    .recent-apps-scroll,
+    .recent-emails-scroll {
+        padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px)) !important;
     }
 }

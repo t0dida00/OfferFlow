@@ -90,14 +90,14 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              // <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <Dashboard
                   user={user}
                   onLogout={handleLogout}
                   isDarkMode={isDarkMode}
                   onToggleTheme={toggleTheme}
                 />
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
         </Routes>

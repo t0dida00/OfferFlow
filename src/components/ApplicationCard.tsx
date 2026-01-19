@@ -50,7 +50,7 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+      <div className="responsive-flex-header mb-4">
         <div className="flex-1">
           <div className="flex items-start gap-3 mb-2">
             <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -69,7 +69,7 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+      <div className="responsive-grid-sm mb-4">
         <div className="flex items-center gap-2  text-gray-600">
           <MapPin className="w-4 h-4" />
           <span>{application.location}</span>

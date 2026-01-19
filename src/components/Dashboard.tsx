@@ -100,11 +100,11 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
     switch (currentView) {
       case 'overview':
         return (
-          <div className="space-y-8">
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Overview</h2>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <div className="responsive-flex-header">
+                <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Overview</h2>
+                <div className="responsive-flex items-center">
                   {lastSync && (
                     <div className="last-sync-desktop flex-row items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
                       <Calendar className="w-4 h-4" />
@@ -114,17 +114,17 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
                   <button
                     onClick={handleGmailSync}
                     disabled={isSyncing}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors disabled:opacity-50 overview-sync-btn"
                   >
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                    <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+                    <span className="hidden sm:inline overview-sync-text">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
                   </button>
                   <button
                     onClick={() => setIsAddModalOpen(true)}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg btn-primary"
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg btn-primary overview-add-btn"
                   >
                     <Plus className="w-4 h-4" />
-                    <span className="hidden sm:inline">Add Application</span>
+                    <span className="hidden sm:inline overview-add-text">Add Application</span>
                   </button>
                 </div>
               </div>
@@ -154,7 +154,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
               <>
                 <ChartsSection applications={applications} />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+                <div className="responsive-grid mt-8">
                   {/* Recent Applications List */}
                   <RecentApplicationsList
                     applications={applications}
@@ -177,9 +177,9 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
 
       case 'applications':
         return (
-          <div className="space-y-8">
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Applications</h2>
+              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Applications</h2>
               <button
                 onClick={() => setIsAddModalOpen(true)}
                 className="flex items-center gap-2 rounded-lg btn-primary"
@@ -194,9 +194,9 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
 
       case 'emails':
         return (
-          <div className="space-y-8">
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Emails</h2>
+              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Recent Emails</h2>
               <button
                 onClick={handleGmailSync}
                 disabled={isSyncing}
@@ -226,9 +226,9 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
       case 'settings':
       case 'account':
         return (
-          <div className="max-w-4xl space-y-8">
+          <div className={`max-w-4xl ${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Account Settings</h2>
+              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Account Settings</h2>
               {/* Only show theme toggle in Account Settings on mobile/tablet */}
               {onToggleTheme && isMobile && (
                 <button
@@ -255,7 +255,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
                 <p className="text-sm text-gray-500 dark:text-gray-400">Update your account's profile information and email address.</p>
               </div>
               <div className="p-6 space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="responsive-grid">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                     <input
@@ -297,8 +297,8 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
         />
       )}
 
-      <main className={`flex-1 min-w-0 transition-all duration-300 ${isMobile ? 'pb-20' : ''}`}>
-        <div className="max-w-[1440px] mx-auto p-4 sm:p-6 lg:p-6 mt-6">
+      <main className="flex-1 min-w-0 transition-all duration-300">
+        <div className={`max-w-[1440px] mx-auto ${isMobile ? 'p-4' : 'p-4 sm:p-6 lg:p-6'} ${isMobile ? 'mt-2' : 'mt-6'}`}>
           {renderContent()}
         </div>
       </main>

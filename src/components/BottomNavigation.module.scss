@@ -6,7 +6,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: var(--bottom-bar-height, 64px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background-color: $white;
   border-top: 1px solid #e7e8ea;
   display: flex;
@@ -71,10 +72,11 @@
       .bottomNav__icon {
         width: 24px;
         height: 24px;
-        padding: $spacing-1;
+        padding: 6px;
         background-color: $gray-200;
         border-radius: $rounded-lg;
         color: $gray-600;
+        box-sizing: content-box;
 
         @include dark {
           background-color: $gray-700;
