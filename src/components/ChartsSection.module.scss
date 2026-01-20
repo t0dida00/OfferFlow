@@ -3,14 +3,10 @@
 
 .charts-section {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: $spacing-6;
     // height: 756px;
     min-height: 422px;
-
-    @media (min-width: 1024px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
     &__card {
         background-color: $white;
@@ -20,8 +16,10 @@
         padding: $spacing-4;
         display: flex;
         flex-direction: column;
+        min-width: 0; // Bắt buộc: cho phép grid item co để tránh overflow với chart
 
-        @media (min-width: 640px) {
+        /* Tablet and Desktop: >= 768px */
+        @media (min-width: 768px) {
             padding: $spacing-6;
         }
 
@@ -45,21 +43,18 @@
 
     &__header {
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         margin-bottom: $spacing-6;
         gap: $spacing-4;
-
-        @media (min-width: 640px) {
-            flex-direction: row;
-        }
     }
 
     &__title-group {
         text-align: center;
 
-        @media (min-width: 640px) {
+        /* Tablet and Desktop: >= 768px */
+        @media (min-width: 768px) {
             text-align: left;
         }
     }

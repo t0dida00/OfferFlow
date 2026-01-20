@@ -106,7 +106,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">All Applications</h2>
 
         {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="responsive-flex">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
             <input
@@ -299,7 +299,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         </div>
       )}
 
-      <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 responsive-flex-header">
         <div className="flex items-center gap-2">
           <p className="text-gray-600 dark:text-gray-400">
             Showing {filteredApplications.length === 0 ? 0 : startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredApplications.length)} of {filteredApplications.length} results

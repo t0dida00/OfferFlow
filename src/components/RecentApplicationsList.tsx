@@ -38,8 +38,8 @@ export function RecentApplicationsList({ applications, onViewAll }: RecentApplic
         .slice(0, 5);
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col" style={{ height: 'fit-content' }}>
-            <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row" style={{ height: 'fit-content' }}>
+            <div className="p-6 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 flex items-center justify-between md:flex-col md:items-start md:justify-start md:min-w-[200px] md:flex-shrink-0">
                 <div>
                     <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
                         <Briefcase className="w-5 h-5" />
@@ -52,14 +52,14 @@ export function RecentApplicationsList({ applications, onViewAll }: RecentApplic
                 {onViewAll && (
                     <button
                         onClick={onViewAll}
-                        className="flex items-center gap-2 rounded-lg btn-primary"
+                        className="flex items-center gap-2 rounded-lg btn-primary md:mt-4"
                     >
                         View All <ArrowRight className="w-4 h-4" />
                     </button>
                 )}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-0" style={{ height: 'fit-content' }}>
+            <div className="flex-1 overflow-y-auto p-0 recent-apps-scroll" style={{ height: 'fit-content' }}>
                 {recentApplications.length > 0 ? (
                     <div className="divide-y divide-gray-100 dark:divide-gray-700">
                         {recentApplications.map(app => (

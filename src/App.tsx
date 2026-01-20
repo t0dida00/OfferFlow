@@ -94,6 +94,8 @@ export default function App() {
                 <Dashboard
                   user={user}
                   onLogout={handleLogout}
+                  isDarkMode={isDarkMode}
+                  onToggleTheme={toggleTheme}
                 />
               </ProtectedRoute>
             }
