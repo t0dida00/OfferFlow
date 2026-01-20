@@ -50,7 +50,7 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 " onClick={onClose} style={{ overflowY: 'auto' }}>
             <div
                 className="bg-white dark:bg-gray-800 min-h-0 rounded-2xl shadow-2xl w-full flex flex-col "
-                style={{ maxWidth: '768px', maxHeight: '95dvh', overflowY: 'auto' }}
+                style={{ maxWidth: '768px', maxHeight: 'calc(95dvh - 126px)', overflowY: 'auto' }}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}

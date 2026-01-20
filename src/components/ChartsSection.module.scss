@@ -1,22 +1,41 @@
 @use '../styles/variables' as *;
 @use '../styles/mixins' as *;
 
+.charts-container {
+    width: 100%;
+    container-type: inline-size;
+
+    @container (width< 860px) {
+        .charts-section {
+            flex-direction: column;
+        }
+    }
+}
+
 .charts-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: $spacing-6;
+    /* Approach 1: Container Query (recommended) */
+    display: flex;
+    flex-direction: row; // default: 2 charts in a row
+    gap: $spacing-6; // ~24px
     // height: 756px;
     min-height: 422px;
+    width: 100%; // ensure full width
+
+    /* IMPORTANT: allow querying based on this container width */
+    // container-type: inline-size;
+
+
 
     &__card {
         background-color: $white;
         border-radius: $rounded-xl;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // shadow-sm
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // small shadow
         border: 1px solid $gray-200;
         padding: $spacing-4;
         display: flex;
         flex-direction: column;
-        min-width: 0; // Bắt buộc: cho phép grid item co để tránh overflow với chart
+        min-width: 0; // required: allow item to shrink and prevent chart overflow
+        flex: 1 1 0; // each chart card takes full available width in the container
 
         /* Tablet and Desktop: >= 768px */
         @media (min-width: 768px) {
@@ -48,6 +67,11 @@
         justify-content: space-between;
         margin-bottom: $spacing-6;
         gap: $spacing-4;
+
+        @media screen and (max-width: 490px) {
+            flex-direction: column;
+            align-items: center;
+        }
     }
 
     &__title-group {
@@ -190,3 +214,17 @@
         }
     }
 }
+
+/* Container query: when container width < 860px -> stack vertically */
+// @container charts (max-width: 860px) {
+//     .charts-section {
+//         flex-direction: column !important;
+//     }
+// }
+
+/* Fallback for browsers that do not support container queries (based on viewport) */
+// .charts-section {
+//     @media charts and (max-width: 860px) {
+//         flex-direction: column !important;
+//     }
+// }

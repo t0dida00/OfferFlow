@@ -51,14 +51,14 @@
         overflow-x: hidden;
         width: 100%;
     }
-    
+
     /* Ensure no horizontal scroll */
     body {
         overflow-x: hidden;
     }
-    
+
     /* Prevent content from overflowing */
-    .space-y-8 > * {
+    .space-y-8>* {
         max-width: 100%;
     }
 }
@@ -73,7 +73,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .overview-sync-btn {
         padding: 0.5rem !important;
         min-width: 2.5rem;
@@ -86,31 +86,87 @@
 
 /* Hide button text on mobile < 440px, show only icons */
 @media (max-width: 440px) {
+
     .overview-sync-text,
     .overview-add-text {
         display: none !important;
     }
-    
+
     .overview-sync-btn,
     .overview-add-btn {
         padding: 0.5rem !important;
         min-width: 2.5rem;
     }
+
+    /* Make Overview header center aligned and buttons on same line */
+    .responsive-flex-header {
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .responsive-flex-header h2 {
+        text-align: center;
+        flex: 0 0 auto;
+    }
+
+    .responsive-flex-header>div:not(:first-child) {
+        justify-content: center;
+        flex: 0 0 auto;
+    }
 }
 
 /* Move heading text in by 1-2px */
 @media (max-width: 1024px) {
+
     h2.text-xl,
     h2.text-2xl {
         padding-left: 2px;
     }
 }
 
-/* Responsive Grid Utility - Auto-fit with minmax (Tối ưu nhất) */
+/* Responsive Grid Utility - Auto-fit with minmax (highly optimized) */
 .responsive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    /* Reduce min-width to avoid overflow on 320px screens */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    width: 100%;
+    /* Ensure width 100% same as charts */
+}
+
+/* Enable container queries for tables section - apply to element with mt-8 class */
+.responsive-grid.mt-8 {
+    /* Enable container queries - query based on container width, not viewport */
+    container-type: inline-size;
+    container-name: tables-grid;
+}
+
+/* Make recent emails and applications vertical (single column) when container width < 800px */
+@container tables-grid (max-width: 800px) {
+    .responsive-grid.mt-8 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Fallback for browsers that don't support container queries */
+@media (max-width: 850px) {
+
+    .responsive-grid.mt-8,
+    .responsive-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Ensure charts and tables have the same width between 961-1017px */
+@media (min-width: 961px) and (max-width: 1017px) {
+    .charts-section {
+        width: 100%;
+    }
+
+    .responsive-grid.mt-8 {
+        width: 100%;
+    }
 }
 
 .responsive-grid-sm {
@@ -125,7 +181,7 @@
     gap: 1.5rem;
 }
 
-/* Responsive Flex Utility - Flex-wrap (Tối ưu nhất) */
+/* Responsive Flex Utility - Flex-wrap (highly optimized) */
 .responsive-flex {
     display: flex;
     flex-wrap: wrap;
@@ -140,7 +196,7 @@
     gap: 1rem;
 }
 
-/* Fix Overview text responsive - luôn nằm cùng hàng */
+/* Fix Overview heading so it always stays on the same row */
 .responsive-flex-header h2 {
     text-align: left;
     flex: 0 0 auto;
@@ -149,7 +205,7 @@
     margin: 0;
 }
 
-.responsive-flex-header > div:not(:first-child) {
+.responsive-flex-header>div:not(:first-child) {
     flex: 0 1 auto;
     display: flex;
     align-items: center;
@@ -161,22 +217,79 @@
 }
 
 /* Grid item must have min-width: 0 to prevent overflow */
-.responsive-grid > *,
-.responsive-grid-sm > *,
-.responsive-grid-lg > * {
+.responsive-grid>*,
+.responsive-grid-sm>*,
+.responsive-grid-lg>* {
     min-width: 0;
 }
 
-/* Fix Bottom Navigation Bar Overlap - CHUẨN */
-/* Main content padding for bottom bar (chỉ khi có bottom nav - mobile/tablet) */
+/* Fix Bottom Navigation Bar overlap - correct behavior */
+/* Main content padding for top mobile header & bottom nav (only when bottom nav is visible - mobile/tablet) */
 @media (max-width: 1024px) {
     main {
+        padding-top: 60px;
+        /* fixed mobile header height */
         padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px));
     }
-    
+
     /* Scroll containers padding for bottom bar */
     .recent-apps-scroll,
     .recent-emails-scroll {
-        padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px)) !important;
+        /* padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px)) !important; */
+    }
+}
+
+/* Mobile Header - fixed on top (height 60px) */
+.mobile-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 60;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-header__content {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-header__icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-header__icon-button:disabled {
+    opacity: 0.6;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mobile-header {
+        background-color: #111827;
+        border-bottom-color: #374151;
+    }
+
+    .mobile-header__icon-button {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
     }
 }
