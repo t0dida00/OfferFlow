@@ -4,7 +4,9 @@ import {
   RefreshCw,
   Calendar,
   Moon,
-  Sun
+  Sun,
+  Menu,
+  Home
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApplicationsTable } from './ApplicationsTable';
@@ -117,14 +119,14 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors disabled:opacity-50 overview-sync-btn"
                   >
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                    <span className="hidden sm:inline overview-sync-text">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+                    <span className="overview-sync-text">{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
                   </button>
                   <button
                     onClick={() => setIsAddModalOpen(true)}
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg btn-primary overview-add-btn"
                   >
                     <Plus className="w-4 h-4" />
-                    <span className="hidden sm:inline overview-add-text">Add Application</span>
+                    <span className="overview-add-text">Add Application</span>
                   </button>
                 </div>
               </div>
@@ -287,6 +289,37 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
 
   return (
     <div className={`flex min-h-screen bg-gray-50 dark:bg-gray-900 ${isMobile ? 'mobile-view' : 'desktop-view'}`}>
+      {/* Mobile Header - fixed at top */}
+      {isMobile && (
+        <header className="mobile-header">
+          <div className="mobile-header__content">
+            <button
+              type="button"
+              className="mobile-header__icon-button"
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="mobile-header__icon-button"
+              aria-label="Go to overview"
+              onClick={() => setCurrentView('overview')}
+            >
+              <Home className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="mobile-header__icon-button"
+              aria-label="Sync Gmail"
+              onClick={handleGmailSync}
+              disabled={isSyncing}
+            >
+              <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </header>
+      )}
       {/* Desktop Sidebar - only render on desktop (> 1024px) */}
       {!isMobile && (
         <Sidebar

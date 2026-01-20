@@ -38,9 +38,10 @@ export function BottomNavigation({
     <nav className={styles.bottomNav}>
       {navItems.map((item) => {
         const Icon = item.icon;
-        // Map account to settings for active state
-        const viewForActive = item.id === 'account' ? 'settings' : item.id;
-        const isActive = currentView === viewForActive && !item.isAdd;
+        // Map account to settings for active state - check for both 'account' and 'settings'
+        const isActive = item.id === 'account' 
+          ? (currentView === 'settings' || currentView === 'account') && !item.isAdd
+          : currentView === item.id && !item.isAdd;
         const isAddButton = item.isAdd;
 
         return (

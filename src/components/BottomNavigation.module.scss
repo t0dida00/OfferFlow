@@ -52,18 +52,29 @@
     }
 
     &--active {
-      color: #232F3F;
+      background-color: #232F3F !important;
+      color: #FFF !important;
       font-weight: 600;
+      border-radius: $rounded-lg;
 
       @include dark {
-        color: $white;
+        background-color: #FFF !important;
+        color: #232F3F !important;
       }
 
       .bottomNav__icon {
-        color: #232F3F;
+        color: #FFF !important;
 
         @include dark {
-          color: $white;
+          color: #232F3F !important;
+        }
+      }
+
+      .bottomNav__label {
+        color: #FFF !important;
+
+        @include dark {
+          color: #232F3F !important;
         }
       }
     }
@@ -110,6 +121,53 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1;
+  }
+
+  /* Responsive: Màn hình nhỏ < 360px */
+  @media (max-width: 360px) {
+    padding: 0 $spacing-1;
+    gap: 0;
+
+    &__item {
+      padding: $spacing-1;
+      gap: 0.25rem;
+      min-height: 56px;
+    }
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &__label {
+      font-size: 0.5rem; // 8px
+    }
+  }
+
+  /* Responsive: Màn hình rất nhỏ < 320px */
+  @media (max-width: 320px) {
+    padding: 0 0.25rem;
+
+    &__item {
+      padding: 0.25rem;
+      min-height: 52px;
+    }
+
+    &__icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    &__label {
+      font-size: 0.45rem; // ~7px
+      letter-spacing: 0;
+    }
+
+    &__item--add .bottomNav__icon {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+    }
   }
 }
 

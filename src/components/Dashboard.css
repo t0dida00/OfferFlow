@@ -96,6 +96,23 @@
         padding: 0.5rem !important;
         min-width: 2.5rem;
     }
+    
+    /* Make Overview header center aligned and buttons on same line */
+    .responsive-flex-header {
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .responsive-flex-header h2 {
+        text-align: center;
+        flex: 0 0 auto;
+    }
+    
+    .responsive-flex-header > div:not(:first-child) {
+        justify-content: center;
+        flex: 0 0 auto;
+    }
 }
 
 /* Move heading text in by 1-2px */
@@ -109,8 +126,43 @@
 /* Responsive Grid Utility - Auto-fit with minmax (Tối ưu nhất) */
 .responsive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    /* Giảm min-width để không overflow ở màn 320px */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    width: 100%; /* Đảm bảo width 100% giống charts */
+}
+
+/* Enable container queries for tables section - apply to element with mt-8 class */
+.responsive-grid.mt-8 {
+    /* Enable container queries - query based on container width, not viewport */
+    container-type: inline-size;
+    container-name: tables-grid;
+}
+
+/* Make recent emails and applications vertical (single column) when container width < 800px */
+@container tables-grid (max-width: 800px) {
+    .responsive-grid.mt-8 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Fallback for browsers that don't support container queries */
+@media (max-width: 800px) {
+    .responsive-grid.mt-8,
+    .responsive-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Đảm bảo charts và tables có cùng width từ 961-1017px */
+@media (min-width: 961px) and (max-width: 1017px) {
+    .charts-section {
+        width: 100%;
+    }
+    
+    .responsive-grid.mt-8 {
+        width: 100%;
+    }
 }
 
 .responsive-grid-sm {
@@ -168,9 +220,10 @@
 }
 
 /* Fix Bottom Navigation Bar Overlap - CHUẨN */
-/* Main content padding for bottom bar (chỉ khi có bottom nav - mobile/tablet) */
+/* Main content padding for top mobile header & bottom nav (chỉ khi có bottom nav - mobile/tablet) */
 @media (max-width: 1024px) {
     main {
+        padding-top: 60px; /* fixed mobile header height */
         padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px));
     }
     
@@ -178,5 +231,60 @@
     .recent-apps-scroll,
     .recent-emails-scroll {
         padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px)) !important;
+    }
+}
+
+/* Mobile Header - fixed on top (height 60px) */
+.mobile-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 60;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-header__content {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-header__icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-header__icon-button:disabled {
+    opacity: 0.6;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mobile-header {
+        background-color: #111827;
+        border-bottom-color: #374151;
+    }
+    
+    .mobile-header__icon-button {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
     }
 }
