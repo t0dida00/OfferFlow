@@ -18,13 +18,13 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 1024);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     window.addEventListener('orientationchange', () => {
       setTimeout(checkMobile, 100);
     });
-    
+
     return () => {
       window.removeEventListener('resize', checkMobile);
       window.removeEventListener('orientationchange', checkMobile);
@@ -34,13 +34,12 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
   return (
     <button
       onClick={onToggle}
-      className={`fixed w-14 h-14 rounded-full shadow-lg border flex items-center justify-center hover:scale-110 transition-transform duration-200 group ${
-        isMobile 
-          ? 'top-6 right-6' 
-          : 'bottom-6 right-6'
-      }`}
+      className={`fixed w-8 h-8 rounded-full shadow-lg border flex items-center justify-center hover:scale-110 transition-transform duration-200 group ${isMobile
+        ? 'top-6 right-6'
+        : 'bottom-6 right-6'
+        }`}
       aria-label="Toggle theme"
-      style={{ 
+      style={{
         zIndex: 9999,
         backgroundColor: isDark ? '#FFF' : '#232F3F',
         color: isDark ? '#232F3F' : '#FFF',
@@ -48,9 +47,9 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
       }}
     >
       {isDark ? (
-        <Sun className="w-6 h-6 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
+        <Sun className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
       ) : (
-        <Moon className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
+        <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
       )}
     </button>
   );

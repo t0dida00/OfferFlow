@@ -48,19 +48,19 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
       const mobile = width <= 1024;
       setIsMobile(mobile);
     };
-    
+
     // Check immediately on mount
     checkMobile();
-    
+
     // Also check on resize
     window.addEventListener('resize', checkMobile);
-    
+
     // Check on orientation change (for mobile devices)
     window.addEventListener('orientationchange', () => {
       // Small delay to ensure orientation change is complete
       setTimeout(checkMobile, 100);
     });
-    
+
     return () => {
       window.removeEventListener('resize', checkMobile);
       window.removeEventListener('orientationchange', checkMobile);
@@ -235,7 +235,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
               {onToggleTheme && isMobile && (
                 <button
                   onClick={onToggleTheme}
-                  className="flex items-center justify-center w-12 h-12 rounded-full shadow-lg border transition-all hover:scale-110 group"
+                  className="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border transition-all hover:scale-110 group"
                   aria-label="Toggle theme"
                   style={{
                     backgroundColor: isDarkMode ? '#FFF' : '#232F3F',
@@ -243,9 +243,9 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
                   }}
                 >
                   {isDarkMode ? (
-                    <Sun className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
+                    <Sun className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
                   ) : (
-                    <Moon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
+                    <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
                   )}
                 </button>
               )}
