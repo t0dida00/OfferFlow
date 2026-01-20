@@ -123,13 +123,13 @@
     }
 }
 
-/* Responsive Grid Utility - Auto-fit with minmax (Tối ưu nhất) */
+/* Responsive Grid Utility - Auto-fit with minmax (highly optimized) */
 .responsive-grid {
     display: grid;
-    /* Giảm min-width để không overflow ở màn 320px */
+    /* Reduce min-width to avoid overflow on 320px screens */
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    width: 100%; /* Đảm bảo width 100% giống charts */
+    width: 100%; /* Ensure width 100% same as charts */
 }
 
 /* Enable container queries for tables section - apply to element with mt-8 class */
@@ -154,7 +154,7 @@
     }
 }
 
-/* Đảm bảo charts và tables có cùng width từ 961-1017px */
+/* Ensure charts and tables have the same width between 961-1017px */
 @media (min-width: 961px) and (max-width: 1017px) {
     .charts-section {
         width: 100%;
@@ -177,7 +177,7 @@
     gap: 1.5rem;
 }
 
-/* Responsive Flex Utility - Flex-wrap (Tối ưu nhất) */
+/* Responsive Flex Utility - Flex-wrap (highly optimized) */
 .responsive-flex {
     display: flex;
     flex-wrap: wrap;
@@ -192,7 +192,7 @@
     gap: 1rem;
 }
 
-/* Fix Overview text responsive - luôn nằm cùng hàng */
+/* Fix Overview heading so it always stays on the same row */
 .responsive-flex-header h2 {
     text-align: left;
     flex: 0 0 auto;
@@ -219,8 +219,8 @@
     min-width: 0;
 }
 
-/* Fix Bottom Navigation Bar Overlap - CHUẨN */
-/* Main content padding for top mobile header & bottom nav (chỉ khi có bottom nav - mobile/tablet) */
+/* Fix Bottom Navigation Bar overlap - correct behavior */
+/* Main content padding for top mobile header & bottom nav (only when bottom nav is visible - mobile/tablet) */
 @media (max-width: 1024px) {
     main {
         padding-top: 60px; /* fixed mobile header height */

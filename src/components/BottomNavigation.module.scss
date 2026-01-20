@@ -123,7 +123,7 @@
     line-height: 1;
   }
 
-  /* Responsive: Màn hình nhỏ < 360px */
+  /* Responsive: small screens < 360px */
   @media (max-width: 360px) {
     padding: 0 $spacing-1;
     gap: 0;
@@ -144,7 +144,7 @@
     }
   }
 
-  /* Responsive: Màn hình rất nhỏ < 320px */
+  /* Responsive: very small screens < 320px */
   @media (max-width: 320px) {
     padding: 0 0.25rem;
 
