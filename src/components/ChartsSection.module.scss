@@ -1,6 +1,17 @@
 @use '../styles/variables' as *;
 @use '../styles/mixins' as *;
 
+.charts-container {
+    width: 100%;
+    container-type: inline-size;
+
+    @container (width< 860px) {
+        .charts-section {
+            flex-direction: column;
+        }
+    }
+}
+
 .charts-section {
     /* Approach 1: Container Query (recommended) */
     display: flex;
@@ -11,8 +22,9 @@
     width: 100%; // ensure full width
 
     /* IMPORTANT: allow querying based on this container width */
-    container-type: inline-size;
-    container-name: charts;
+    // container-type: inline-size;
+
+
 
     &__card {
         background-color: $white;
@@ -199,15 +211,15 @@
 }
 
 /* Container query: when container width < 860px -> stack vertically */
-@container charts (max-width: 860px) {
-    .charts-section {
-        flex-direction: column !important;
-    }
-}
+// @container charts (max-width: 860px) {
+//     .charts-section {
+//         flex-direction: column !important;
+//     }
+// }
 
 /* Fallback for browsers that do not support container queries (based on viewport) */
-@media (max-width: 860px) {
-    .charts-section {
-        flex-direction: column !important;
-    }
-}
+// .charts-section {
+//     @media charts and (max-width: 860px) {
+//         flex-direction: column !important;
+//     }
+// }
