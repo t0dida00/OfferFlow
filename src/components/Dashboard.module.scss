@@ -1,0 +1,738 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: $gray-50;
+
+  @include dark {
+    background-color: $gray-900;
+  }
+
+  &--mobile {
+    .dashboard__main {
+      padding-top: 60px; // Fixed mobile header height
+      padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); // Bottom nav height + safe area
+      overflow-y: auto; // Ensures scrolling works on mobile
+      height: 100vh; // Ensures height for scrolling
+      -webkit-overflow-scrolling: touch; // Smooth scroll on iOS
+    }
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    transition: all 0.3s;
+    overflow-y: auto; // Allows scrolling on mobile/tablet
+    height: 100vh; // Ensures height for scrolling
+    -webkit-overflow-scrolling: touch; // Smooth scroll on iOS
+
+    // On mobile/tablet: add padding to avoid being covered by header and bottom nav
+    @media (max-width: 1024px) {
+      padding-top: 60px; // Fixed mobile header height
+      padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); // Bottom nav height + safe area
+    }
+  }
+
+  &__content {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: $spacing-4;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden; // Prevents horizontal scroll
+
+    // Below 320px: reduce padding
+    @media (max-width: 319px) {
+      padding: $spacing-3;
+    }
+
+    @media (min-width: 640px) {
+      padding: $spacing-6;
+    }
+
+    @media (min-width: 1024px) {
+      padding: $spacing-6;
+      margin-top: $spacing-6;
+    }
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+    // Scroll margin to prevent header from covering when scrolling to (mobile/tablet)
+    scroll-margin-top: 60px; // Mobile header height
+
+    @media (min-width: 768px) {
+      gap: $spacing-8;
+      scroll-margin-top: 0; // Desktop doesn't need it
+    }
+
+    // On mobile, reduce gap for Applications section
+    @media (max-width: 767px) {
+      gap: $spacing-3;
+    }
+  }
+
+  &__headerRow {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-3;
+    flex-wrap: wrap;
+    // Ensures header is not covered by mobile header
+    position: relative;
+    z-index: 1;
+
+    // On mobile/tablet: add padding-top to avoid being covered
+    @media (max-width: 1024px) {
+      padding-top: $spacing-2; // Add small padding to avoid being covered
+    }
+  }
+
+  &__title {
+    font-size: $text-2xl;
+    font-weight: 700;
+    margin: 0;
+    color: $gray-900; // Ensures color on light mode
+
+    @media (max-width: 767px) {
+      font-size: $text-xl; // Reduce font size on mobile
+    }
+
+    @include dark {
+      color: $white; // Dark mode: white text
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    flex-wrap: nowrap; // No wrap - always horizontal (row) even below 320px
+    flex-direction: row; // Always row
+  }
+
+  &__last-sync--desktop,
+  &__last-sync--mobile {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $text-sm;
+    color: $gray-500;
+    background-color: $white;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $rounded-lg;
+    border: 1px solid $gray-200;
+
+    @include dark {
+      background-color: $gray-800;
+      border-color: $gray-700;
+      color: $gray-400;
+    }
+  }
+
+  &__last-sync--desktop {
+    display: none;
+
+    @media (min-width: 768px) {
+      display: inline-flex;
+    }
+  }
+
+  &__last-sync--mobile {
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+
+  &__syncButton,
+  &__addButton {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $rounded-lg;
+    border: 1px solid $gray-200;
+    background-color: $white;
+    color: $gray-700;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    @include dark {
+      background-color: $gray-800;
+      border-color: $gray-700;
+      color: $gray-300;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__syncButton:hover,
+  &__addButton:hover {
+    background-color: $gray-50;
+
+    @include dark {
+      background-color: $gray-700;
+    }
+  }
+
+  &__addButton {
+    border: none;
+    background-color: #232F3F;
+    color: $white;
+
+    @include dark {
+      background-color: #232F3F;
+    }
+  }
+
+  &__syncText,
+  &__addText {
+    @media (max-width: 475px) {
+      display: none; // Hide text, show only icon when <= 475px
+    }
+  }
+
+  // Adjust button when only showing icon
+  &__syncButton,
+  &__addButton {
+    @media (max-width: 475px) {
+      padding: $spacing-2; // Reduce padding when only icon is shown
+      min-width: 2.5rem; // Min width cho icon button
+      justify-content: center; // Center icon
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-6;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch; // Ensures items have same height
+
+    // Grid items need min-width: 0 to prevent overflow
+    > * {
+      min-width: 0;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    // When container width < 800px, switch to column
+    @media (max-width: 799px) {
+      grid-template-columns: 1fr;
+    }
+
+    // Below 320px: ensure single column and reduce gap
+    @media (max-width: 319px) {
+      grid-template-columns: 1fr !important;
+      gap: $spacing-4;
+    }
+  }
+
+  // Separate grid for Profile Information - limit width
+  &__cardBody &__grid {
+    gap: $spacing-8; // space-y-8 = 2rem = 32px
+    
+    // Limit width of each field to prevent stretching
+    .dashboard__field {
+      max-width: 100%;
+      min-width: 0; // Allows field to shrink when needed
+    }
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    background-color: $white;
+    border-radius: $rounded-xl;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid $gray-100;
+    padding: $spacing-8;
+
+    @include dark {
+      background-color: $gray-800;
+      border-color: $gray-700;
+    }
+  }
+
+  &__emptyTitle {
+    font-size: $text-2xl;
+    font-weight: 600;
+    margin-bottom: $spacing-2;
+
+    @include dark {
+      color: $white;
+    }
+  }
+
+  &__emptyText {
+    color: $gray-500;
+    margin-bottom: $spacing-4;
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__primaryButton {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    border-radius: $rounded-lg;
+    border: none;
+    background-color: #232F3F;
+    color: $white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+    text-align: center;
+    gap: $spacing-3;
+  }
+
+  &__calendarIcon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: $rounded-full;
+    background-color: $blue-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include dark {
+      background-color: rgba($blue-900, 0.3);
+    }
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      color: $blue-600;
+
+      @include dark {
+        color: $blue-300; // Dark mode: lighter icon color
+      }
+    }
+  }
+
+  &__mutedText {
+    color: $gray-500;
+    max-width: 24rem;
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__card {
+    background-color: $white;
+    border: 1px solid $gray-200;
+    border-radius: $rounded-xl;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+    @include dark {
+      background-color: $gray-800;
+      border-color: $gray-700;
+    }
+  }
+
+  &__cardHeader {
+    padding: $spacing-6;
+    border-bottom: 1px solid $gray-200;
+
+    @include dark {
+      border-bottom-color: $gray-700;
+    }
+
+    h3 {
+      margin: 0 0 $spacing-1 0;
+      color: $gray-900;
+
+      @include dark {
+        color: $white; // Dark mode: white text
+      }
+    }
+
+    p {
+      margin: 0;
+      color: $gray-500;
+
+      @include dark {
+        color: $gray-400;
+      }
+    }
+  }
+
+  &__cardBody {
+    padding: $spacing-6;
+
+    // Grid in Profile Information - limit width
+    .dashboard__grid {
+      gap: $spacing-8; // space-y-8 = 2rem = 32px
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+
+      .dashboard__field {
+        max-width: 100%;
+        min-width: 0; // Allows field to shrink when needed
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+
+    label {
+      font-size: $text-sm;
+      font-weight: 500;
+      color: $gray-700;
+
+      @include dark {
+        color: $gray-300;
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: $spacing-2 $spacing-4;
+      border-radius: $rounded-lg;
+      border: 1px solid $gray-300;
+      background-color: $gray-50;
+
+      @include dark {
+        background-color: $gray-900;
+        border-color: $gray-600;
+        color: $white;
+      }
+    }
+  }
+
+  &__sectionNarrow {
+    max-width: 64rem; // 1024px
+
+    // Limit width of card in narrow section to prevent stretching
+    .dashboard__card {
+      max-width: 100%;
+    }
+  }
+
+  &__iconSm {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &__iconMd {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__icon--spin {
+    animation: spin 1s linear infinite;
+  }
+
+  &__mobileHeader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 60;
+    background-color: #232F3F; // Blue like bottom tab
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include dark {
+      background-color: #232F3F; // Still blue in dark mode
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &__mobileContent {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 $spacing-4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__mobileIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: $rounded-full;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    @include dark {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: $white;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+
+  &__themeButton {
+    width: 40px;
+    height: 40px;
+    border-radius: $rounded-full;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #232F3F; // Blue when screen is light
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    @include dark {
+      background-color: $white; // Dark mode: white background
+      border-color: rgba(35, 47, 63, 0.2);
+      color: #232F3F; // Dark mode: blue icon (correct)
+    }
+
+    svg {
+      @include dark {
+        color: #232F3F; // Dark mode: blue icon
+      }
+    }
+
+    &:hover {
+      background-color: rgba(35, 47, 63, 0.9); // Darker blue khi hover
+
+      @include dark {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f9fafb; // bg-gray-50
+    color: #111827; // text-gray-900
+  
+    &--dark {
+      background-color: #111827; // dark:bg-gray-900
+      color: #ffffff;
+    }
+  
+    &__main {
+      flex: 1;
+      min-width: 0;
+      transition: all 0.3s ease;
+    }
+  
+    &__content-wrapper {
+      max-width: 1440px;
+      margin-left: auto;
+      margin-right: auto;
+      
+      &--mobile {
+        padding: 1rem; // p-4
+        margin-top: 0.5rem; // mt-2
+      }
+  
+      &--desktop {
+        padding: 1rem; // p-4
+        margin-top: 1.5rem; // mt-6
+        
+        @media (min-width: 640px) { padding: 1.5rem; } // sm:p-6
+      }
+    }
+  
+    &__view-container {
+      &--spaced-small {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; // space-y-4
+      }
+  
+      &--spaced-large {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem; // space-y-8
+      }
+    }
+  
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      &-title {
+        font-weight: 700;
+        color: inherit;
+  
+        &--mobile { font-size: 1.25rem; } // text-xl
+        &--desktop { font-size: 1.5rem; } // text-2xl
+      }
+    }
+  
+    &__actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem; // gap-3
+    }
+  
+    &__sync-info {
+      display: none; // Hidden by default on mobile
+  
+      @media (min-width: 640px) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+        background: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+      }
+  
+      &--dark {
+        background: #1f2937;
+        border-color: #374151;
+        color: #9ca3af;
+      }
+    }
+  
+    &__empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      background: white;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      border: 1px solid #f3f4f6;
+      text-align: center;
+  
+      &--dark {
+        background: #1f2937;
+        border-color: #374151;
+      }
+  
+      &-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+  
+      &-description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      }
+    }
+  
+    &__coming-soon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 100px);
+      text-align: center;
+  
+      &-icon-wrapper {
+        width: 4rem;
+        height: 4rem;
+        background: #dbeafe;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  
+  .mobile-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+  
+    &__content {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+    }
+  
+    &__icon-button {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+      
+      &:active { background: #f3f4f6; }
+      &:disabled { opacity: 0.5; }
+    }
+  }

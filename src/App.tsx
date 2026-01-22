@@ -101,6 +101,7 @@ export default function App() {
             }
           />
         </Routes>
+        {/* ThemeToggle hiển thị trên tất cả các trang, cả mobile và desktop */}
         <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
       </div>
     </BrowserRouter>

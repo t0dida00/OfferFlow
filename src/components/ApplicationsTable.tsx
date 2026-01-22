@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
+import clsx from 'clsx';
 
 import { Application } from '../types';
 import { ApplicationDetailsModal } from './ApplicationDetailsModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-// We'll need access to api.ts functions, but maybe better to prompt user or just pass dummy onSave for now if api update not ready?
-// Or we can define it here or import it. The plan says add updateApplication to api.ts next.
-// I'll import updateApplication, assuming I'll add it in the next step.
 import { updateApplication } from '../services/api';
+import styles from './ApplicationsTable.module.scss';
 
 interface ApplicationsTableProps {
   applications: Application[];
 }
 
-const resultStyles: Record<string, { bg: string; text: string; dot: string }> = {
-  Applied: { bg: 'bg-gray-100', text: 'text-gray-700', dot: 'bg-gray-500' },
-  Interview: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
-  Offer: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
-  Rejected: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
+const statusMap: Record<string, 'Applied' | 'Interview' | 'Offer' | 'Rejected'> = {
+  Applied: 'Applied',
+  Interview: 'Interview',
+  Offer: 'Offer',
+  Rejected: 'Rejected',
 };
 
 export function ApplicationsTable({ applications }: ApplicationsTableProps) {
@@ -100,30 +99,28 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-      {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 p-6">
-        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">All Applications</h2>
+    <div className={styles.applicationsTable}>
+      <div className={styles.applicationsTable__header}>
+        <h2 className={styles.applicationsTable__title}>All Applications</h2>
 
-        {/* Search and Filter */}
-        <div className="responsive-flex">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <div className={styles.applicationsTable__controls}>
+          <div className={styles.applicationsTable__searchWrapper}>
+            <Search className={styles.applicationsTable__searchIcon} />
             <input
               type="text"
               placeholder="Search company, role, or location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.applicationsTable__search}
             />
           </div>
 
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+          <div className={styles.applicationsTable__filterWrapper}>
+            <Filter className={styles.applicationsTable__filterIcon} />
             <select
               value={filterResult}
               onChange={(e) => setFilterResult(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white cursor-pointer min-w-[150px]"
+              className={styles.applicationsTable__filter}
             >
               <option value="all">All Results</option>
               <option value="Applied">Applied</option>
@@ -136,100 +133,69 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
       </div>
 
       {!isMobile ? (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
+        <div className={styles.applicationsTable__tableWrapper}>
+          <table className={styles.applicationsTable__table}>
+            <thead className={styles.applicationsTable__thead}>
               <tr>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('_id')}
-                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                  >
-                    ID
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('company')}
-                    className="flex items-center gap-1 font-medium uppercase tracking-wider hover:opacity-70 text-gray-500 dark:text-gray-400"
-                  >
-                    Company
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('role')}
-                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                  >
-                    Role
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('location')}
-                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                  >
-                    Location
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('date')}
-                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                  >
-                    Applied
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
-                <th className="px-6 py-3 text-left">
-                  <button
-                    onClick={() => handleSort('status')}
-                    className="flex items-center gap-1 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200"
-                  >
-                    Result
-                    <ArrowUpDown className="w-3 h-3" />
-                  </button>
-                </th>
+                {(['_id', 'company', 'role', 'location', 'date', 'status'] as (keyof Application | '_id')[]).map(
+                  (field, idx) => (
+                    <th key={field} className={styles.applicationsTable__th}>
+                      <button
+                        onClick={() => handleSort(field as keyof Application)}
+                        className={styles.applicationsTable__sortBtn}
+                      >
+                        {['ID', 'Company', 'Role', 'Location', 'Applied', 'Result'][idx]}
+                        <ArrowUpDown className={styles.applicationsTable__icon} />
+                      </button>
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className={styles.applicationsTable__tbody}>
               {filteredApplications.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={6} className={styles.applicationsTable__empty}>
                     No applications found
                   </td>
                 </tr>
               ) : (
                 paginatedApplications.map((app, index) => {
-                  const style = resultStyles[app.status] || resultStyles.Applied;
+                  const statusKey = statusMap[app.status] || 'Applied';
                   return (
                     <tr
                       key={app._id}
                       onClick={() => setSelectedApp(app)}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+                      className={styles.applicationsTable__row}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      <td className={clsx(styles.applicationsTable__td, styles['applicationsTable__td--id'])}>
                         #{index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900 dark:text-white">{app.company}</div>
+                      <td className={clsx(styles.applicationsTable__td, styles['applicationsTable__td--company'])}>
+                        <div>{app.company}</div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-gray-900 dark:text-gray-300">{app.role}</div>
+                      <td className={clsx(styles.applicationsTable__td, styles['applicationsTable__td--role'])}>
+                        <div>{app.role}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
+                      <td className={clsx(styles.applicationsTable__td, styles['applicationsTable__td--muted'])}>
                         {app.location}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
+                      <td className={clsx(styles.applicationsTable__td, styles['applicationsTable__td--muted'])}>
                         {new Date(app.date).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium ${style.bg} ${style.text}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`}></span>
+                      <td className={styles.applicationsTable__td}>
+                        <span
+                          className={clsx(
+                            styles.applicationsTable__status,
+                            styles[`applicationsTable__status--${statusKey}`],
+                          )}
+                        >
+                          <span
+                            className={clsx(
+                              styles.applicationsTable__statusDot,
+                              styles[`applicationsTable__statusDot--${statusKey}`],
+                            )}
+                          />
                           {app.status}
                         </span>
                       </td>
@@ -242,52 +208,52 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         </div>
       ) : (
         /* Mobile Accordion Layout (visible < 600px) */
-        <div>
+        <div className={styles.applicationsTable__mobile}>
           {filteredApplications.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-              No applications found
-            </div>
+            <div className={styles.applicationsTable__empty}>No applications found</div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {paginatedApplications.map((app, index) => {
                 const isExpanded = expandedRows[app._id];
-                const style = resultStyles[app.status] || resultStyles.Applied;
+                const statusKey = statusMap[app.status] || 'Applied';
                 const globalIndex = startIndex + index + 1;
 
                 return (
-                  <div key={app._id} className="bg-white dark:bg-gray-800">
+                  <div key={app._id} className={styles.applicationsTable__mobileCard}>
                     <div
                       onClick={(e) => toggleRow(app._id, e)}
-                      className="px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                      className={styles.applicationsTable__mobileHeader}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className=" dark:text-gray-400 font-medium whitespace-nowrap">
-                          #{globalIndex} {app.company}
-                        </span>
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
-                          <span className={`w-1 h-1 rounded-full ${style.dot}`}></span>
+                      <div className={styles.applicationsTable__mobileMeta}>
+                        <span>#{globalIndex} {app.company}</span>
+                        <span
+                          className={clsx(
+                            styles.applicationsTable__status,
+                            styles[`applicationsTable__status--${statusKey}`],
+                          )}
+                        >
+                          <span
+                            className={clsx(
+                              styles.applicationsTable__statusDot,
+                              styles[`applicationsTable__statusDot--${statusKey}`],
+                            )}
+                          />
                           {app.status}
                         </span>
                       </div>
-                      {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
-                      )}
+                      {isExpanded ? <ChevronUp /> : <ChevronDown />}
                     </div>
 
                     {isExpanded && (
                       <div
-                        className="px-4 pb-4 animate-in slide-in-from-top-1 duration-200"
+                        className={styles.applicationsTable__mobileBody}
                         onClick={() => setSelectedApp(app)}
                       >
-                        <div className="rounded-lg p-4 text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:opacity-80 transition-opacity">
-                          <div className="font-mono text-xs text-gray-400 mb-1">ID: {app._id}</div>
-                          <div className="flex flex-col gap-y-1 ">
-                            <span className="font-semibold text-gray-900 dark:text-white">{app.role}</span>
-                            <span>{app.location}</span>
-                            <span>{new Date(app.date).toLocaleDateString()}</span>
-                          </div>
+                        <div className={styles.applicationsTable__mobileDetails}>
+                          <div>ID: {app._id}</div>
+                          <div>{app.role}</div>
+                          <div>{app.location}</div>
+                          <div>{new Date(app.date).toLocaleDateString()}</div>
                         </div>
                       </div>
                     )}
@@ -299,10 +265,12 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
         </div>
       )}
 
-      <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 responsive-flex-header">
-        <div className="flex items-center gap-2">
-          <p className="text-gray-600 dark:text-gray-400">
-            Showing {filteredApplications.length === 0 ? 0 : startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredApplications.length)} of {filteredApplications.length} results
+      <div className={styles.applicationsTable__pagination}>
+        <div className={styles.applicationsTable__paginationInfo}>
+          <p>
+            Showing {filteredApplications.length === 0 ? 0 : startIndex + 1} to{' '}
+            {Math.min(startIndex + itemsPerPage, filteredApplications.length)} of{' '}
+            {filteredApplications.length} results
           </p>
           <select
             value={itemsPerPage}
@@ -310,7 +278,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
               setItemsPerPage(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className={styles.applicationsTable__paginationSelect}
           >
             <option value={10}>10 per page</option>
             <option value={20}>20 per page</option>
@@ -319,25 +287,25 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={styles.applicationsTable__paginationControls}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-500 dark:text-gray-400"
+            className={styles.applicationsTable__paginationBtn}
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft />
           </button>
 
-          <span className="font-medium text-gray-600 dark:text-gray-400">
+          <span className={styles.applicationsTable__paginationPage}>
             Page {currentPage} of {Math.max(1, totalPages)}
           </span>
 
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || totalPages === 0}
-            className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-500 dark:text-gray-400"
+            className={styles.applicationsTable__paginationBtn}
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight />
           </button>
         </div>
       </div>

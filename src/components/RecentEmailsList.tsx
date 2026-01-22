@@ -1,135 +1,115 @@
-import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+
 import { Mail, RefreshCw, ArrowRight } from 'lucide-react';
 import { fetchEmails } from '../services/api';
 import { Email } from '../types';
+import styles from './RecentEmailsList.module.scss';
 
-const statusColors: Record<string, string> = {
-    Applied: 'text-gray-600 bg-gray-100',
-    Interview: 'text-yellow-700 bg-yellow-100',
-    Offer: 'text-green-700 bg-green-100',
-    Rejected: 'text-red-700 bg-red-100',
+type StatusKey = 'Applied' | 'Interview' | 'Offer' | 'Rejected';
+const statusMap: Record<string, StatusKey> = {
+  Applied: 'Applied',
+  Interview: 'Interview',
+  Offer: 'Offer',
+  Rejected: 'Rejected',
 };
 
 interface RecentEmailsListProps {
-    onSync: () => void;
-    isSyncing: boolean;
-    limit?: number;
-    className?: string;
-    onViewAll?: () => void;
+  onSync: () => void;
+  isSyncing: boolean;
+  limit?: number;
+  className?: string;
+  onViewAll?: () => void;
 }
 
 export function RecentEmailsList({ onSync, isSyncing, limit, className, onViewAll }: RecentEmailsListProps) {
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 767);
 
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 767);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+  const { data: rawEmails, isLoading } = useQuery({
+    queryKey: ['emails'],
+    queryFn: fetchEmails,
+  });
 
-    const { data: rawEmails, isLoading } = useQuery({
-        queryKey: ['emails'],
-        queryFn: fetchEmails,
-    });
+  const allEmails: Email[] = rawEmails?.data || [];
+  const sortedEmails = [...allEmails].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const emails = limit ? sortedEmails.slice(0, limit) : sortedEmails;
 
-    const allEmails: Email[] = rawEmails?.data || [];
-    // Sort emails by date descending (newest first)
-    const sortedEmails = [...allEmails].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    const emails = limit ? sortedEmails.slice(0, limit) : sortedEmails;
-
-    return (
-        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row ${className || (isMobile ? 'max-h-[calc(100vh-200px)]' : 'h-[600px]')}`}>
-            <div className="p-6 border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 flex items-center justify-between md:flex-col md:items-start md:justify-start md:min-w-[200px] md:flex-shrink-0 flex-shrink-0">
-                <div>
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                        <Mail className="w-5 h-5" />
-                        Recent Related Emails
-                    </h2>
-                    {limit ? (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1 ml-7">
-                            Last {limit} items
-                        </p>
-                    ) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1 ml-7">
-                            Total {emails.length} emails
-                        </p>
-                    )}
-                </div>
-                {onViewAll && (
-                    <button
-                        onClick={onViewAll}
-                        className="flex items-center gap-2 rounded-lg btn-primary md:mt-4"
-                    >
-                        View All <ArrowRight className="w-4 h-4" />
-                    </button>
-                )}
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-0 min-h-0 recent-emails-scroll" style={{ WebkitOverflowScrolling: 'touch' }}>
-                {isLoading ? (
-                    <div className="flex items-center justify-center h-full">
-                        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
-                    </div>
-                ) : emails.length > 0 ? (
-                    <div className={`divide-y divide-gray-100 dark:divide-gray-700 ${isMobile ? 'pb-4' : ''}`}>
-                        {emails.map(email => (
-                            <div
-                                key={email.emailId}
-                                className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group"
-                                onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${email.emailId}`, '_blank')}
-                            >
-                                {!isMobile ? (
-                                    <div className="flex justify-between items-center mb-1">
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <h4 className="font-semibold text-gray-900 dark:text-white truncate">
-                                                {email.subject}
-                                            </h4>
-                                            <span className={`font-semibold px-2.5 py-1 rounded-full shrink-0 ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
-                                                {email.status}
-                                            </span>
-                                        </div>
-                                        <span className="whitespace-nowrap ml-4 opacity-70 shrink-0">
-                                            {new Date(email.date).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <div className="mb-2">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[email.status] || 'text-gray-600 bg-gray-100'}`}>
-                                                {email.status}
-                                            </span>
-                                            <span className="text-xs opacity-70">
-                                                {new Date(email.date).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 dark:text-white truncate">
-                                            {email.subject}
-                                        </h4>
-                                    </div>
-                                )}
-
-                                <p className="line-clamp-2 opacity-70">
-                                    {email.snippet}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
-                        <div className="text-2xl font-semibold dark:text-white mb-2">No Recent Emails</div>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">Sync your Gmail to see your recent job-related emails here.</p>
-                        <button
-                            onClick={onSync}
-                            disabled={isSyncing}
-                            className="flex items-center gap-2 rounded-lg disabled:opacity-50 font-medium btn-primary"
-                        >
-                            <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
-                            <span>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
-                        </button>
-                    </div>
-                )}
-            </div>
+  return (
+    <div className={clsx(styles.recentEmails, className)} style={{ height: 'fit-content' }}>
+      <div className={styles.recentEmails__sidebar}>
+        <div>
+          <h2 className={styles.recentEmails__title}>
+            <Mail className={styles.recentEmails__icon} />
+            Recent Related Emails
+          </h2>
+          {limit ? (
+            <p className={styles.recentEmails__subtitle}>Last {limit} items</p>
+          ) : (
+            <p className={styles.recentEmails__subtitle}>Total {emails.length} emails</p>
+          )}
         </div>
-    );
+        {onViewAll && (
+          <button type="button" onClick={onViewAll} className={styles.recentEmails__button}>
+            View All <ArrowRight className={styles.recentEmails__buttonIcon} />
+          </button>
+        )}
+      </div>
+
+      <div className={styles.recentEmails__listWrapper} style={{ height: 'fit-content' }}>
+        {isLoading ? (
+          <div className={styles.recentEmails__loader}>
+            <RefreshCw className={styles.recentEmails__spinner} />
+          </div>
+        ) : emails.length > 0 ? (
+          <div className={styles.recentEmails__list}>
+            {emails.map((email) => {
+              const statusKey = statusMap[email.status] || 'Applied';
+              const statusClass = clsx(
+                styles.recentEmails__status,
+                styles[`recentEmails__status--${statusKey}`],
+              );
+
+              return (
+                <div
+                  key={email.emailId}
+                  className={styles.recentEmails__item}
+                  onClick={() =>
+                    window.open(`https://mail.google.com/mail/u/0/#inbox/${email.emailId}`, '_blank')
+                  }
+                >
+                  <div className={styles.recentEmails__itemHeader}>
+                    <div>
+                      <h4 className={styles.recentEmails__subject}>{email.subject}</h4>
+                      <p className={styles.recentEmails__snippet}>{email.snippet}</p>
+                    </div>
+                    <div className={styles.recentEmails__statusWrapper}>
+                      <span className={statusClass}>{email.status}</span>
+                      <span className={styles.recentEmails__date}>
+                        {new Date(email.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={styles.recentEmails__empty}>
+            <p className={styles['recentEmails__empty-title']}>No Recent Emails</p>
+            <p className={styles['recentEmails__empty-text']}>
+              Sync your Gmail to see your recent job-related emails here.
+            </p>
+            <button
+              type="button"
+              onClick={onSync}
+              disabled={isSyncing}
+              className={styles['recentEmails__empty-button']}
+            >
+              <RefreshCw className={isSyncing ? styles.recentEmails__spinner : ''} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
