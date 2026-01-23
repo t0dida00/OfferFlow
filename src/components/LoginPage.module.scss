@@ -233,6 +233,13 @@
   h1 {
     color: white;
   }
+
+  .logo {
+    height: 3.5rem; // approx 56px
+    width: auto;
+    // margin-bottom: 1rem;
+    filter: brightness(0) invert(1);
+  }
 }
 
 .panelContentLeft {
@@ -281,6 +288,7 @@
 }
 
 @keyframes show {
+
   0%,
   49.99% {
     opacity: 0;
@@ -374,4 +382,3 @@
     font-size: 24px;
   }
 }
-

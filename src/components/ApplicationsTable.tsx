@@ -66,9 +66,9 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const filteredApplications = applications
     .filter(app => {
       const matchesSearch =
-        app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.location.toLowerCase().includes(searchQuery.toLowerCase());
+        (app.company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (app.role?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (app.location?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       const matchesFilter = filterResult === 'all' || app.status === filterResult;
       return matchesSearch && matchesFilter;
     })

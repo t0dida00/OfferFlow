@@ -1,5 +1,5 @@
 {
-      "name": "Job Application Tracker UI",
+      "name": "jlog",
       "version": "0.1.0",
       "private": true,
       "dependencies": {
