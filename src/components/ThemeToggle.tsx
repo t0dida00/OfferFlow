@@ -1,5 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import styles from './ThemeToggle.module.scss';
 
 interface ThemeToggleProps {
   isDark: boolean;
@@ -34,22 +36,21 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
   return (
     <button
       onClick={onToggle}
-      className={`fixed w-8 h-8 rounded-full shadow-lg border flex items-center justify-center hover:scale-110 transition-transform duration-200 group ${isMobile
-        ? 'top-6 right-6'
-        : 'bottom-6 right-6'
-        }`}
+      className={clsx(
+        styles.themeToggle,
+        isMobile ? styles['themeToggle--mobile'] : styles['themeToggle--desktop']
+      )}
       aria-label="Toggle theme"
       style={{
-        zIndex: 9999,
         backgroundColor: isDark ? '#FFF' : '#232F3F',
         color: isDark ? '#232F3F' : '#FFF',
         borderColor: isDark ? '#232F3F' : '#FFF'
       }}
     >
       {isDark ? (
-        <Sun className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
+        <Sun className={clsx(styles.themeToggle__icon, styles['themeToggle__icon--sun'])} style={{ color: '#232F3F' }} />
       ) : (
-        <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
+        <Moon className={clsx(styles.themeToggle__icon, styles['themeToggle__icon--moon'])} style={{ color: '#FFF' }} />
       )}
     </button>
   );

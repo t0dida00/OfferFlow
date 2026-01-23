@@ -1,5 +1,7 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
+import styles from './AddApplicationModal.module.scss';
+import modalStyles from './Modal.module.scss';
 
 interface AddApplicationModalProps {
   onClose: () => void;
@@ -22,21 +24,23 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
-        <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Add New Application</h2>
+    <div className={modalStyles['modal__overlay']} onClick={onClose}>
+      <div className={styles.addApplicationModal__dialog} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.addApplicationModal__header}>
+          <h2 className={styles.addApplicationModal__title}>Add New Application</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className={styles.addApplicationModal__closeButton}
+            type="button"
+            aria-label="Close modal"
           >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <X />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
+        <form onSubmit={handleSubmit} className={styles.addApplicationModal__form}>
+          <div className={styles.addApplicationModal__field}>
+            <label className={styles.addApplicationModal__label}>
               Company Name *
             </label>
             <input
@@ -44,13 +48,13 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
               required
               value={formData.company}
               onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.addApplicationModal__input}
               placeholder="e.g., Google"
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
+          <div className={styles.addApplicationModal__field}>
+            <label className={styles.addApplicationModal__label}>
               Role *
             </label>
             <input
@@ -58,13 +62,13 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
               required
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.addApplicationModal__input}
               placeholder="e.g., Senior Software Engineer"
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
+          <div className={styles.addApplicationModal__field}>
+            <label className={styles.addApplicationModal__label}>
               Location *
             </label>
             <input
@@ -72,13 +76,13 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
               required
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.addApplicationModal__input}
               placeholder="e.g., San Francisco, CA"
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
+          <div className={styles.addApplicationModal__field}>
+            <label className={styles.addApplicationModal__label}>
               Date Applied *
             </label>
             <input
@@ -86,18 +90,18 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
               required
               value={formData.dateApplied}
               onChange={(e) => setFormData({ ...formData, dateApplied: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.addApplicationModal__input}
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
+          <div className={styles.addApplicationModal__field}>
+            <label className={styles.addApplicationModal__label}>
               Status
             </label>
             <select
               value={formData.result}
               onChange={(e) => setFormData({ ...formData, result: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className={styles.addApplicationModal__select}
             >
               <option value="Applied">Applied</option>
               <option value="Interview">Interview</option>
@@ -106,17 +110,17 @@ export function AddApplicationModal({ onClose }: AddApplicationModalProps) {
             </select>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className={styles.addApplicationModal__footer}>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              className={styles.addApplicationModal__cancelButton}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-3 py-3 rounded-lg btn-primary"
+              className={styles.addApplicationModal__submitButton}
             >
               Add Application
             </button>

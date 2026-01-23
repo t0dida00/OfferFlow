@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import styles from './LoginSuccess.module.scss';
 
 interface LoginSuccessProps {
     onLogin: (token: string) => void;
@@ -22,10 +23,10 @@ export function LoginSuccess({ onLogin }: LoginSuccessProps) {
     }, [searchParams, navigate, onLogin]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-            <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Completing login...</h2>
+        <div className={styles.loginSuccess}>
+            <div className={styles.loginSuccess__content}>
+                <div className={styles.loginSuccess__spinner}></div>
+                <h2 className={styles.loginSuccess__title}>Completing login...</h2>
             </div>
         </div>
     );

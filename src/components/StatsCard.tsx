@@ -1,4 +1,6 @@
 import { LucideIcon } from 'lucide-react';
+import clsx from 'clsx';
+import styles from './StatsCard.module.scss';
 
 interface StatsCardProps {
   label: string;
@@ -7,48 +9,19 @@ interface StatsCardProps {
   color: 'blue' | 'gray' | 'yellow' | 'green' | 'red' | 'indigo';
 }
 
-const colorStyles = {
-  blue: {
-    bg: 'bg-blue-50 dark:bg-blue-500/10',
-    text: 'text-blue-600 dark:text-blue-400',
-  },
-  gray: {
-    bg: 'bg-gray-50 dark:bg-gray-500/10',
-    text: 'text-gray-600 dark:text-gray-400',
-  },
-  yellow: {
-    bg: 'bg-yellow-50 dark:bg-yellow-500/10',
-    text: 'text-yellow-600 dark:text-yellow-400',
-  },
-  green: {
-    bg: 'bg-emerald-50 dark:bg-emerald-500/10',
-    text: 'text-emerald-600 dark:text-emerald-400',
-  },
-  red: {
-    bg: 'bg-red-50 dark:bg-red-500/10',
-    text: 'text-red-600 dark:text-red-400',
-  },
-  indigo: {
-    bg: 'bg-indigo-50 dark:bg-indigo-500/10',
-    text: 'text-indigo-600 dark:text-indigo-400',
-  },
-};
-
 export function StatsCard({ label, value, icon: Icon, color }: StatsCardProps) {
-  const styles = colorStyles[color];
-
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-      <div className="flex justify-between items-start mb-4">
-        <p className="font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+    <div className={styles.statsCard}>
+      <div className={styles.statsCard__header}>
+        <p className={styles.statsCard__label}>
           {label}
         </p>
-        <div className={`p-2 rounded-lg ${styles.bg} ${styles.text}`}>
-          <Icon className="w-5 h-5" />
+        <div className={clsx(styles.statsCard__iconWrapper, styles[`statsCard__iconWrapper--${color}`])}>
+          <Icon />
         </div>
       </div>
       <div>
-        <h3 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h3 className={styles.statsCard__value}>
           {value}
         </h3>
       </div>

@@ -1,0 +1,459 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.applicationsTable {
+  background: $white;
+  border: 1px solid $gray-200;
+  border-radius: $rounded-xl;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); // shadow-sm
+
+  @include dark {
+    background: $gray-800;
+    border-color: $gray-700;
+  }
+
+  &__header {
+    border-bottom: 1px solid $gray-200;
+    padding: $spacing-6;
+
+    @media (max-width: 767px) {
+      padding: $spacing-4; // Reduce padding on mobile
+    }
+
+    @include dark {
+      border-bottom-color: $gray-700;
+    }
+  }
+
+  &__title {
+    font-size: $text-xl;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0 0 $spacing-4 0;
+
+    @media (max-width: 767px) {
+      font-size: $text-lg; // Reduce font size on mobile
+      margin-bottom: $spacing-3;
+    }
+
+    @include dark {
+      color: $white;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: nowrap; // No wrap so filter always stays to the right of search
+    gap: $spacing-2;
+    align-items: stretch; // Stretch to same height
+    flex-direction: row; // Always row so filter stays to the right of search - at all widths, even below 320px
+  }
+
+  &__searchWrapper {
+    position: relative;
+    flex: 1 1 0%; // Flex basis 0% to not take extra space - can shrink
+    min-width: 80px; // Very small min width so search can shrink, making room for filter
+  }
+
+  &__searchIcon {
+    position: absolute;
+    left: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: $gray-400;
+  }
+
+  &__search {
+    width: 100%;
+    padding: $spacing-2 $spacing-4 $spacing-2 2.5rem; // py-2 pl-10 pr-4
+    border: 1px solid $gray-300;
+    border-radius: $rounded-lg;
+    background: $white;
+    color: $gray-900;
+    font-size: $text-base; // text-base
+    transition: box-shadow 0.2s;
+    box-sizing: border-box; // Ensures padding doesn't cause overflow
+
+    @include dark {
+      background: $gray-700;
+      border-color: $gray-600;
+      color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px $blue-500; // focus:ring-2 focus:ring-blue-500
+      border-color: transparent; // focus:border-transparent
+    }
+  }
+
+  &__filterWrapper {
+    position: relative;
+    flex-shrink: 0; // Prevents shrinking - to "contain" filter
+    flex-grow: 0; // Prevents growing
+    width: 140px; // Fixed width for filter - enough to display "All Results"
+    min-width: 140px; // Min width for filter - ensures enough space
+    max-width: 140px; // Max width for filter
+  }
+
+  &__filterIcon {
+    position: absolute;
+    left: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: $gray-400;
+  }
+
+  &__filter {
+    padding: $spacing-2 $spacing-8 $spacing-2 2.5rem; // py-2 pl-10 pr-8
+    border-radius: $rounded-lg;
+    border: 1px solid $gray-300;
+    background: $white;
+    color: $gray-900;
+    min-width: 100%; // Full width in wrapper to "contain" it
+    width: 100%; // Full width in wrapper
+    appearance: none;
+    cursor: pointer;
+    font-size: $text-base; // text-base
+    box-sizing: border-box; // Ensures padding doesn't cause overflow
+    white-space: nowrap; // No text wrapping
+    overflow: hidden;
+    text-overflow: ellipsis; // Ellipsis if too long
+
+    @include dark {
+      background: $gray-700;
+      border-color: $gray-600;
+      color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px $blue-500; // focus:ring-2 focus:ring-blue-500
+      border-color: transparent; // focus:border-transparent
+    }
+  }
+
+  &__tableWrapper {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  &__thead {
+    background: $gray-50;
+    border-bottom: 1px solid $gray-200;
+
+    @include dark {
+      background: rgba($gray-700, 0.5);
+      border-bottom-color: $gray-700;
+    }
+  }
+
+  &__th {
+    padding: $spacing-3 $spacing-6; // px-6 py-3
+    text-align: left;
+  }
+
+  &__sortBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-weight: 500; // font-medium (not 600)
+    font-size: $text-sm; // text-base (not text-xs)
+    text-transform: uppercase;
+    letter-spacing: 0.05em; // tracking-wider
+    color: $gray-500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.7; // hover:opacity-70
+    }
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__icon {
+    width: 0.75rem; // w-3
+    height: 0.75rem; // h-3
+  }
+
+  &__tbody tr {
+    border-bottom: 1px solid $gray-200;
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.15s; // transition-colors
+    cursor: pointer;
+
+    @include dark {
+      border-bottom-color: $gray-700;
+    }
+
+    &:hover {
+      background: $gray-50;
+
+      @include dark {
+        background: rgba($gray-700, 0.5);
+      }
+    }
+  }
+
+  &__td {
+    padding: $spacing-4 $spacing-6; // px-6 py-4
+    color: $gray-900;
+    white-space: nowrap; // whitespace-nowrap
+    font-size: $text-base; // text-base
+
+    @include dark {
+      color: $white;
+    }
+  }
+
+  &__td--id {
+    font-weight: 500; // font-medium
+  }
+
+  &__td--company {
+    div {
+      font-weight: 500; // font-medium
+    }
+  }
+
+  &__td--role {
+    white-space: normal; // Not nowrap for role
+
+    div {
+      color: $gray-900;
+      font-weight: 400; // normal
+
+      @include dark {
+        color: $gray-300; // dark:text-gray-300
+      }
+    }
+  }
+
+  &__td--muted {
+    color: $gray-600;
+    font-size: $text-base;
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem; // gap-1.5
+    padding: 0.25rem 0.625rem; // px-2.5 py-1
+    border-radius: $rounded-full;
+    font-weight: 500; // font-medium
+    font-size: $text-sm; // text-sm
+
+    &--Applied {
+      background: $gray-100;
+      color: $gray-700; // text-gray-700 (not $gray-600)
+    }
+    &--Interview {
+      background: $yellow-100;
+      color: $yellow-700; // text-yellow-700 (not $yellow-600)
+    }
+    &--Offer {
+      background: $green-100;
+      color: $green-700; // text-green-700 (not $green-600)
+    }
+    &--Rejected {
+      background: $red-100;
+      color: $red-700;
+    }
+  }
+
+  &__statusDot {
+    width: 0.375rem; // w-1.5
+    height: 0.375rem; // h-1.5
+    border-radius: $rounded-full;
+
+    &--Applied {
+      background: $gray-500;
+    }
+    &--Interview {
+      background: $yellow-500;
+    }
+    &--Offer {
+      background: $green-500;
+    }
+    &--Rejected {
+      background: $red-500;
+    }
+  }
+
+  &__empty {
+    padding: $spacing-12 $spacing-6;
+    text-align: center;
+    color: $gray-500;
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__mobile {
+    background: $white;
+
+    @include dark {
+      background: $gray-800;
+    }
+  }
+
+  &__mobileHeader {
+    padding: $spacing-2 $spacing-4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  &__mobileMeta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__mobileBody {
+    padding: $spacing-2 $spacing-4 $spacing-4;
+  }
+
+  &__pagination {
+    border-top: 1px solid $gray-200;
+    padding: $spacing-4 $spacing-6; // px-6 py-4
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-2;
+    align-items: center;
+    justify-content: space-between; // Desktop: space-between (Page 1 of 1 on right)
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+    }
+
+    @media (max-width: 639px) {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center; // Mobile: center when wrapping to new line
+    }
+
+    @include dark {
+      border-top-color: $gray-700;
+    }
+  }
+
+  &__paginationControls {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    // Desktop: keep as is (on right with space-between)
+    // Mobile: center when wrapping to new line
+    @media (max-width: 639px) {
+      justify-content: center; // Center "Page 1 of 1" when wrapping to new line
+    }
+  }
+
+  &__paginationSelect {
+    border: 1px solid $gray-300;
+    border-radius: $rounded-lg;
+    padding: $spacing-1 $spacing-2; // px-2 py-1
+    background: $white;
+    font-size: $text-base; // text-base
+    color: $gray-900;
+
+    @include dark {
+      border-color: $gray-600;
+      background: $gray-700;
+      color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px $blue-500; // focus:ring-2 focus:ring-blue-500
+      border-color: transparent; // focus:border-transparent
+    }
+  }
+
+  &__paginationInfo {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    p {
+      color: $gray-600;
+      font-size: $text-base;
+      margin: 0;
+
+      @include dark {
+        color: $gray-400;
+      }
+    }
+  }
+
+
+  &__paginationPage {
+    font-weight: 500; // font-medium
+    color: $gray-600;
+    font-size: $text-base;
+
+    @include dark {
+      color: $gray-400;
+    }
+  }
+
+  &__paginationBtn {
+    padding: $spacing-1; // p-1
+    border-radius: $rounded-md; // rounded-md
+    border: none;
+    background: none;
+    color: $gray-500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    @include dark {
+      color: $gray-400;
+    }
+
+    &:hover:not(:disabled) {
+      background: $gray-100;
+
+      @include dark {
+        background: $gray-700;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5; // disabled:opacity-50
+      cursor: not-allowed; // disabled:cursor-not-allowed
+    }
+
+    svg {
+      width: 1.25rem; // w-5
+      height: 1.25rem; // h-5
+    }
+  }
+}
+
+// Don't switch to column below 320px - always keep row so filter "contains" everything
+// @media (max-width: 320px) {
+//   .applicationsTable__controls {
+//     flex-direction: column;
+//   }
+// }
