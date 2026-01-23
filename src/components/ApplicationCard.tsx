@@ -1,4 +1,6 @@
 import { Building2, MapPin, DollarSign, Calendar, FileText } from 'lucide-react';
+import clsx from 'clsx';
+import styles from './ApplicationCard.module.scss';
 
 type ApplicationStatus = 'applied' | 'interview' | 'offer' | 'rejected';
 
@@ -21,27 +23,19 @@ interface ApplicationCardProps {
 const statusConfig = {
   applied: {
     label: 'Applied',
-    bgColor: 'bg-gray-100',
-    textColor: 'text-gray-700',
-    dotColor: 'bg-gray-500',
+    statusClass: 'applied',
   },
   interview: {
     label: 'Interview',
-    bgColor: 'bg-yellow-100',
-    textColor: 'text-yellow-700',
-    dotColor: 'bg-yellow-500',
+    statusClass: 'interview',
   },
   offer: {
     label: 'Offer Received',
-    bgColor: 'bg-green-100',
-    textColor: 'text-green-700',
-    dotColor: 'bg-green-500',
+    statusClass: 'offer',
   },
   rejected: {
     label: 'Rejected',
-    bgColor: 'bg-red-100',
-    textColor: 'text-red-700',
-    dotColor: 'bg-red-500',
+    statusClass: 'rejected',
   },
 };
 
@@ -49,49 +43,59 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
   const status = statusConfig[application.status];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-      <div className="responsive-flex-header mb-4">
-        <div className="flex-1">
-          <div className="flex items-start gap-3 mb-2">
-            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Building2 className="w-6 h-6 text-gray-600" />
+    <div className={styles.applicationCard}>
+      <div className={styles.applicationCard__header}>
+        <div className={styles.applicationCard__main}>
+          <div className={styles.applicationCard__info}>
+            <div className={styles.applicationCard__icon}>
+              <Building2 />
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900">{application.position}</h3>
-              <p className="text-gray-600">{application.company}</p>
+            <div className={styles.applicationCard__details}>
+              <h3 className={styles.applicationCard__position}>{application.position}</h3>
+              <p className={styles.applicationCard__company}>{application.company}</p>
             </div>
           </div>
         </div>
 
-        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bgColor} ${status.textColor}`}>
-          <div className={`w-2 h-2 rounded-full ${status.dotColor}`}></div>
-          <span className=" font-medium">{status.label}</span>
+        <div
+          className={clsx(
+            styles.applicationCard__status,
+            styles[`applicationCard__status--${status.statusClass}`],
+          )}
+        >
+          <div
+            className={clsx(
+              styles.applicationCard__statusDot,
+              styles[`applicationCard__statusDot--${status.statusClass}`],
+            )}
+          />
+          <span>{status.label}</span>
         </div>
       </div>
 
-      <div className="responsive-grid-sm mb-4">
-        <div className="flex items-center gap-2  text-gray-600">
-          <MapPin className="w-4 h-4" />
+      <div className={styles.applicationCard__grid}>
+        <div className={styles.applicationCard__meta}>
+          <MapPin />
           <span>{application.location}</span>
         </div>
-        <div className="flex items-center gap-2  text-gray-600">
-          <DollarSign className="w-4 h-4" />
+        <div className={styles.applicationCard__meta}>
+          <DollarSign />
           <span>{application.salary}</span>
         </div>
-        <div className="flex items-center gap-2 text-gray-600">
-          <Calendar className="w-4 h-4" />
+        <div className={styles.applicationCard__meta}>
+          <Calendar />
           <span>Applied: {new Date(application.appliedDate).toLocaleDateString()}</span>
         </div>
-        <div className="flex items-center gap-2 text-gray-600">
-          <Calendar className="w-4 h-4" />
+        <div className={styles.applicationCard__meta}>
+          <Calendar />
           <span>Updated: {new Date(application.lastUpdate).toLocaleDateString()}</span>
         </div>
       </div>
 
       {application.notes && (
-        <div className="flex gap-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
-          <FileText className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-          <p className=" text-blue-900">{application.notes}</p>
+        <div className={styles.applicationCard__notes}>
+          <FileText />
+          <p>{application.notes}</p>
         </div>
       )}
     </div>

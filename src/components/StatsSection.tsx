@@ -1,5 +1,6 @@
 import { FileText, Send, Video, Award, TrendingUp } from 'lucide-react';
 import { StatsCard } from './StatsCard';
+import styles from './StatsSection.module.scss';
 
 interface Application {
   _id: string;
@@ -60,7 +61,7 @@ export function StatsSection({ applications }: StatsSectionProps) {
   ];
 
   return (
-    <div className="responsive-grid-sm">
+    <div className={styles.statsSection}>
       {stats.map((stat, index) => (
         <StatsCard
           key={index}

@@ -1,0 +1,14 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.statsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-4; // gap-4
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-3;
+  }
+}
+

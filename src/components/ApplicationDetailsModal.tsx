@@ -3,6 +3,8 @@ import { X, Mail, Calendar, MapPin, Building, Briefcase, ExternalLink, Plus } fr
 import { Application, Email } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
 import { EmailSelectionModal } from './EmailSelectionModal';
+import modalStyles from './Modal.module.scss';
+import styles from './ApplicationDetailsModal.module.scss';
 
 interface ApplicationDetailsModalProps {
     application: Application;
@@ -47,82 +49,79 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
     }, []);
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 " onClick={onClose} style={{ overflowY: 'auto' }}>
+        <div className={modalStyles['modal__backdrop']} onClick={onClose}>
             <div
-                className="bg-white dark:bg-gray-800 min-h-0 rounded-2xl shadow-2xl w-full flex flex-col "
-                style={{ maxWidth: '768px', maxHeight: 'calc(95dvh - 126px)', overflowY: 'auto' }}
+                className={modalStyles['modal__dialog']}
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Header */}
-                <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shrink-0">
+                <div className={modalStyles['modal__header']}>
                     <div>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Application Details</h2>
-                        {/* <p className="text-sm text-gray-500 dark:text-gray-400">#{application.id}</p> */}
+                        <h2 className={modalStyles['modal__title']}>Application Details</h2>
                     </div>
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className={modalStyles['modal__close']}
                     >
-                        <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                        <X />
                     </button>
                 </div>
 
-                <div className="flex-1 flex flex-col md:flex-row min-h-0">
-                    {/* Left Column: Edit Form */}
-                    <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
-                        <form id="edit-form" onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                                    <Building className="w-4 h-4" /> Company
+                <div className={styles.appDetailsModal__layout}>
+                    <div className={styles.appDetailsModal__formSection}>
+                        <form id="edit-form" onSubmit={handleSubmit} className={styles.appDetailsModal__form}>
+                            <div className={styles.appDetailsModal__field}>
+                                <label className={styles.appDetailsModal__label}>
+                                    <Building /> Company
                                 </label>
                                 <input
                                     type="text"
                                     value={formData.company}
                                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    className={styles.appDetailsModal__input}
                                 />
                             </div>
-                            <div>
-                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                                    <Briefcase className="w-4 h-4" /> Role
+                            <div className={styles.appDetailsModal__field}>
+                                <label className={styles.appDetailsModal__label}>
+                                    <Briefcase /> Role
                                 </label>
                                 <input
                                     type="text"
                                     value={formData.role}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    className={styles.appDetailsModal__input}
                                 />
                             </div>
-                            <div>
-                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                                    <MapPin className="w-4 h-4" /> Location
+                            <div className={styles.appDetailsModal__field}>
+                                <label className={styles.appDetailsModal__label}>
+                                    <MapPin /> Location
                                 </label>
                                 <input
                                     type="text"
                                     value={formData.location}
                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    className={styles.appDetailsModal__input}
                                 />
                             </div>
-                            <div>
-                                <label className="block font-medium mb-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                                    <Calendar className="w-4 h-4" /> Date Applied
+                            <div className={styles.appDetailsModal__field}>
+                                <label className={styles.appDetailsModal__label}>
+                                    <Calendar /> Date Applied
                                 </label>
                                 <input
                                     type="date"
                                     value={formData.date ? new Date(formData.date).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    className={styles.appDetailsModal__input}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <div className={styles.appDetailsModal__field}>
+                                <label className={styles.appDetailsModal__label}>
                                     Status
                                 </label>
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    className={styles.appDetailsModal__select}
                                 >
                                     <option value="Applied">Applied</option>
                                     <option value="Interview">Interview</option>
@@ -133,23 +132,22 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                         </form>
                     </div>
 
-                    {/* Right Column: Related Emails */}
-                    <div className="w-full md:w-2/3 p-6 bg-gray-50 dark:bg-gray-900 overflow-y-auto max-h-[100px]" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                <Mail className="w-5 h-5" /> Related Emails
+                    <div className={styles.appDetailsModal__emailsSection}>
+                        <div className={styles.appDetailsModal__emailsHeader}>
+                            <h3 className={styles.appDetailsModal__emailsTitle}>
+                                <Mail /> Related Emails
                             </h3>
                             <button
                                 type="button"
                                 onClick={() => setIsEmailModalOpen(true)}
-                                className="rounded-full p-0.5 btn-icon-custom hover:opacity-90 transition-opacity flex items-center justify-center"
+                                className={styles.appDetailsModal__emailsManageButton}
                                 title="Manage linked emails"
                             >
-                                <Plus className="w-6 h-6" />
+                                <Plus />
                             </button>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className={styles.appDetailsModal__emailsList}>
                             {relatedEmails.length > 0 ? (
                                 relatedEmails.map((email: Email) => (
                                     <a
@@ -157,26 +155,24 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                                         href={`https://mail.google.com/mail/u/0/#inbox/${email.emailId}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="block bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
+                                        className={styles.appDetailsModal__emailCard}
                                     >
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-medium line-clamp-1 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                        <div className={styles.appDetailsModal__emailHeader}>
+                                            <h4 className={styles.appDetailsModal__emailSubject}>
                                                 {email.subject}
                                             </h4>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-gray-500 whitespace-nowrap">
-                                                    {new Date(email.date).toLocaleDateString()}
-                                                </span>
-                                                <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-blue-500" />
+                                            <div className={styles.appDetailsModal__emailMeta}>
+                                                <span>{new Date(email.date).toLocaleDateString()}</span>
+                                                <ExternalLink />
                                             </div>
                                         </div>
-                                        <p className="line-clamp-2 mb-2 text-gray-700 dark:text-gray-300">
+                                        <p className={styles.appDetailsModal__emailSnippet}>
                                             {email.snippet}
                                         </p>
                                     </a>
                                 ))
                             ) : (
-                                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <div className={styles.appDetailsModal__emailsEmpty}>
                                     No related emails found for this application.
                                 </div>
                             )}
@@ -184,19 +180,18 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                     </div>
                 </div>
 
-                {/* Footer */}
-                <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-end gap-3 shrink-0">
+                <div className={styles.appDetailsModal__footer}>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                        className={styles.appDetailsModal__footerButton}
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         form="edit-form"
-                        className="rounded-lg btn-primary"
+                        className={`${styles.appDetailsModal__footerButton} ${styles['appDetailsModal__footerButton--primary']}`}
                     >
                         Save Changes
                     </button>

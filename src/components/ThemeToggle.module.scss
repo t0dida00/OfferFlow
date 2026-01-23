@@ -1,0 +1,51 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.themeToggle {
+  position: fixed;
+  width: 2rem; // w-8
+  height: 2rem; // h-8
+  border-radius: 50%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); // shadow-lg
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 9999;
+
+  &:hover {
+    transform: scale(1.1); // hover:scale-110
+  }
+
+  &--mobile {
+    bottom: calc(60px + 1.5rem); // Above bottom navigation (60px) + spacing
+    right: 1.5rem; // right-6
+    top: auto; // Override top
+  }
+
+  &--desktop {
+    bottom: 1.5rem; // bottom-6
+    right: 1.5rem; // right-6
+  }
+
+  &__icon {
+    width: 1rem; // w-4
+    height: 1rem; // h-4
+    transition: transform 0.3s;
+
+    &--sun {
+      &:hover {
+        transform: rotate(180deg); // group-hover:rotate-180
+      }
+    }
+
+    &--moon {
+      &:hover {
+        transform: rotate(12deg); // group-hover:rotate-12
+      }
+    }
+  }
+}
+
