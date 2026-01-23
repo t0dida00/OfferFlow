@@ -47,12 +47,23 @@
     gap: $spacing-2;
     align-items: stretch; // Stretch to same height
     flex-direction: row; // Always row so filter stays to the right of search - at all widths, even below 320px
+
+    @media (max-width: 390px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $spacing-3;
+    }
   }
 
   &__searchWrapper {
     position: relative;
     flex: 1 1 0%; // Flex basis 0% to not take extra space - can shrink
     min-width: 80px; // Very small min width so search can shrink, making room for filter
+
+    @media (max-width: 390px) {
+      width: 100%;
+      flex: none;
+    }
   }
 
   &__searchIcon {
@@ -93,9 +104,16 @@
     position: relative;
     flex-shrink: 0; // Prevents shrinking - to "contain" filter
     flex-grow: 0; // Prevents growing
-    width: 140px; // Fixed width for filter - enough to display "All Results"
-    min-width: 140px; // Min width for filter - ensures enough space
-    max-width: 140px; // Max width for filter
+    width: 180px; // Fixed width for filter - enough to display "All Results"
+    min-width: 180px; // Min width for filter - ensures enough space
+    max-width: 180px; // Max width for filter
+
+    @media (max-width: 390px) {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+      flex: none;
+    }
   }
 
   &__filterIcon {
@@ -266,14 +284,17 @@
       background: $gray-100;
       color: $gray-700; // text-gray-700 (not $gray-600)
     }
+
     &--Interview {
       background: $yellow-100;
       color: $yellow-700; // text-yellow-700 (not $yellow-600)
     }
+
     &--Offer {
       background: $green-100;
       color: $green-700; // text-green-700 (not $green-600)
     }
+
     &--Rejected {
       background: $red-100;
       color: $red-700;
@@ -288,12 +309,15 @@
     &--Applied {
       background: $gray-500;
     }
+
     &--Interview {
       background: $yellow-500;
     }
+
     &--Offer {
       background: $green-500;
     }
+
     &--Rejected {
       background: $red-500;
     }
@@ -363,6 +387,7 @@
     display: flex;
     align-items: center;
     gap: $spacing-2;
+
     // Desktop: keep as is (on right with space-between)
     // Mobile: center when wrapping to new line
     @media (max-width: 639px) {
@@ -395,6 +420,14 @@
     display: flex;
     align-items: center;
     gap: $spacing-2;
+    flex-wrap: wrap; // Allow wrapping
+
+    @media (max-width: 390px) {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
 
     p {
       color: $gray-600;

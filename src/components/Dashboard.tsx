@@ -6,7 +6,8 @@ import {
   Moon,
   Sun,
   Menu,
-  Home
+  Home,
+  LogOut
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApplicationsTable } from './ApplicationsTable';
@@ -221,54 +222,58 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
       case 'settings':
       case 'account':
         return (
-          <div className={`max-w-4xl ${isMobile ? 'space-y-4' : 'space-y-8'}`}>
-            <div className="flex items-center justify-between">
-              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Account Settings</h2>
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'} ${styles.dashboard__sectionNarrow}`}>
+            <div className={styles.dashboard__header}>
+              <h2 className={styles.dashboard__title}>Account Settings</h2>
               {/* Only show theme toggle in Account Settings on mobile/tablet */}
               {onToggleTheme && isMobile && (
                 <button
                   onClick={onToggleTheme}
-                  className="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border transition-all hover:scale-110 group"
+                  className={styles.dashboard__themeButton}
                   aria-label="Toggle theme"
-                  style={{
-                    backgroundColor: isDarkMode ? '#FFF' : '#232F3F',
-                    borderColor: isDarkMode ? '#232F3F' : '#FFF'
-                  }}
                 >
                   {isDarkMode ? (
-                    <Sun className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
+                    <Sun className={styles.dashboard__iconSm} />
                   ) : (
-                    <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
+                    <Moon className={styles.dashboard__iconSm} />
                   )}
                 </button>
               )}
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Profile Information</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Update your account's profile information and email address.</p>
+            <div className={styles.dashboard__card}>
+              <div className={styles.dashboard__cardHeader}>
+                <h3>Profile Information</h3>
+                <p>Update your account's profile information and email address.</p>
               </div>
-              <div className="p-6 space-y-8">
-                <div className="responsive-grid">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+              <div className={styles.dashboard__cardBody}>
+                <div className={styles.dashboard__grid}>
+                  <div className={styles.dashboard__field}>
+                    <label>Full Name</label>
                     <input
                       type="text"
                       value={user?.name || ''}
                       readOnly
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                  <div className={styles.dashboard__field}>
+                    <label>Email Address</label>
                     <input
                       type="text"
                       value={user?.email || ''}
                       readOnly
-                      className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                     />
                   </div>
+                </div>
+
+                <div className={styles.dashboard__cardFooter}>
+                  <button
+                    onClick={onLogout}
+                    className={styles.dashboard__logoutButton}
+                  >
+                    <LogOut className={styles.dashboard__iconSm} />
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>

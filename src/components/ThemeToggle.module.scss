@@ -20,9 +20,7 @@
   }
 
   &--mobile {
-    bottom: calc(60px + 1.5rem); // Above bottom navigation (60px) + spacing
-    right: 1.5rem; // right-6
-    top: auto; // Override top
+    display: none; // Hide on mobile (< 1024px)
   }
 
   &--desktop {
@@ -48,4 +46,3 @@
     }
   }
 }
-
