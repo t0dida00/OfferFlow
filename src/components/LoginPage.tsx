@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import './LoginPage.css';
+import clsx from 'clsx';
+import styles from './LoginPage.module.scss';
+import logo from '../public/icons/logo.svg';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const BACKEND_GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
@@ -53,10 +56,10 @@ export function LoginPage() {
         </div>
 
         {/* Overlay Panel */}
-        <div className="slide-panel-wrapper">
-          <div className="slide-panel">
-            <div className="panel-content panel-content-right">
-              <h1>Jobber!</h1>
+        <div className={styles.slidePanelWrapper}>
+          <div className={styles.slidePanel}>
+            <div className={clsx(styles.panelContent, styles.panelContentRight)}>
+              <img src={logo} alt="JLOG" className={styles.logo} />
               <p>Begin tracking your applications</p>
             </div>
           </div>

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { User } from '../types';
 import styles from './Sidebar.module.scss';
+import logo from '../public/icons/logo.svg';
 
 interface SidebarProps {
     user: User | null;
@@ -55,9 +56,7 @@ export function Sidebar({
         <div className={styles.sidebar}>
             {/* Header / Logo */}
             <div className={styles.sidebar__header}>
-                <h1 className={styles.sidebar__title}>
-                    OFFERFLOW
-                </h1>
+                <img src={logo} alt="JLOG" className={styles.sidebar__logo} />
             </div>
 
             {/* Navigation */}

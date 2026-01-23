@@ -34,19 +34,16 @@
         align-items: center;
         padding: $spacing-6;
         border-bottom: 1px solid #e7e8ea;
-
+        justify-content: center;
         margin-bottom: $spacing-4;
     }
 
-    &__title {
-        font-size: 1.5rem; // text-2xl
-        font-weight: 700; // font-bold
-        letter-spacing: -0.025em; // tracking-tight
-        color: #232F3F;
-        margin: 0;
+    &__logo {
+        height: 2.5rem; // approx 40px
+        width: auto;
 
         @include dark {
-            color: $white;
+            filter: brightness(0) invert(1);
         }
     }
 
