@@ -3,6 +3,8 @@ import {
   Plus,
   RefreshCw,
   Calendar,
+  Moon,
+  Sun,
   Menu,
   Home
 } from 'lucide-react';
@@ -16,8 +18,9 @@ import { Sidebar } from './Sidebar';
 import { BottomNavigation } from './BottomNavigation';
 import { fetchApplications, syncGmail } from '../services/api';
 import { User } from '../types';
+import './Dashboard.css';
 import styles from './Dashboard.module.scss';
-import clsx from 'clsx';
+import logo from '../public/icons/logo.svg';
 
 
 interface DashboardProps {
@@ -27,7 +30,7 @@ interface DashboardProps {
   onToggleTheme?: () => void;
 }
 
-export function Dashboard({ user, onLogout }: DashboardProps) {
+export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }: DashboardProps) {
   const queryClient = useQueryClient();
   const [currentView, setCurrentView] = useState('overview');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -101,65 +104,44 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     switch (currentView) {
       case 'overview':
         return (
-          <div className={styles.dashboard__section}>
-            <div className={styles.dashboard__headerRow}>
-              <div className={styles.dashboard__header}>
-                <h2 className={styles.dashboard__title}>Overview</h2>
-                <div className={styles.dashboard__actions}>
-                  {lastSync && (
-                    <div className={styles['dashboard__last-sync--desktop']}>
-                      <Calendar className={styles.dashboard__iconSm} />
-                      <span>Last sync: {lastSync.toLocaleString()}</span>
-                    </div>
-                  )}
-                  <button
-                    onClick={handleGmailSync}
-                    disabled={isSyncing}
-                    className={styles.dashboard__syncButton}
-                  >
-                    <RefreshCw
-                      className={clsx(styles.dashboard__iconSm, {
-                        [styles['dashboard__icon--spin']]: isSyncing,
-                      })}
-                    />
-                    <span className={styles.dashboard__syncText}>
-                      {isSyncing ? 'Syncing...' : 'Sync Gmail'}
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className={styles.dashboard__addButton}
-                  >
-                    <Plus className={styles.dashboard__iconSm} />
-                    <span className={styles.dashboard__addText}>Add Application</span>
-                  </button>
-                </div>
-              </div>
-
-              {lastSync && (
-                <div className={styles['dashboard__last-sync--mobile']}>
-                  <Calendar className={styles.dashboard__iconSm} />
-                  <span>Last sync: {lastSync.toLocaleString()}</span>
-                </div>
-              )}
-            </div>
-
-            {applications.length === 0 ? (
-              <div className={styles.dashboard__empty}>
-                <div className={styles.dashboard__emptyTitle}>No Data</div>
-                <p className={styles.dashboard__emptyText}>
-                  Sync your Gmail to get started tracking your job applications.
-                </p>
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
+            <div className={styles.dashboard__header}>
+              <h2 className={styles.dashboard__title}>Overview</h2>
+              <div className={styles.dashboard__actions}>
+                {lastSync && (
+                  <div className={styles.dashboard__lastSync}>
+                    <Calendar className={styles.dashboard__iconSm} />
+                    <span>Last sync: {lastSync.toLocaleString()}</span>
+                  </div>
+                )}
                 <button
                   onClick={handleGmailSync}
                   disabled={isSyncing}
-                  className={styles.dashboard__primaryButton}
+                  className={styles.dashboard__syncButton}
                 >
-                  <RefreshCw
-                    className={clsx(styles.dashboard__iconMd, {
-                      [styles['dashboard__icon--spin']]: isSyncing,
-                    })}
-                  />
+                  <RefreshCw className={`${styles.dashboard__iconSm} ${isSyncing ? styles['dashboard__icon--spin'] : ''}`} />
+                  <span className={styles.dashboard__syncText}>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
+                </button>
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className={styles.dashboard__addButton}
+                >
+                  <Plus className={styles.dashboard__iconSm} />
+                  <span className={styles.dashboard__addText}>Add Application</span>
+                </button>
+              </div>
+            </div>
+
+            {applications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
+                <div className="text-2xl font-semibold dark:text-white mb-2">No Data</div>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">Sync your Gmail to get started tracking your job applications.</p>
+                <button
+                  onClick={handleGmailSync}
+                  disabled={isSyncing}
+                  className="flex items-center gap-2 rounded-lg disabled:opacity-50 font-medium btn-primary"
+                >
+                  <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
                   <span>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
                 </button>
               </div>
@@ -167,16 +149,19 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               <>
                 <ChartsSection applications={applications} />
 
-                <div className={styles.dashboard__grid}>
+                <div className="responsive-grid mt-8">
+                  {/* Recent Applications List */}
                   <RecentApplicationsList
                     applications={applications}
                     onViewAll={() => setCurrentView('applications')}
                   />
 
+                  {/* Recent Emails List */}
                   <RecentEmailsList
                     onSync={handleGmailSync}
                     isSyncing={isSyncing}
                     limit={5}
+                    className="h-full"
                     onViewAll={() => setCurrentView('emails')}
                   />
                 </div>
@@ -187,7 +172,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
       case 'applications':
         return (
-          <div className={styles.dashboard__section}>
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className={styles.dashboard__header}>
               <h2 className={styles.dashboard__title}>Applications</h2>
               <button
@@ -204,7 +189,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
       case 'emails':
         return (
-          <div className={styles.dashboard__section}>
+          <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className={styles.dashboard__header}>
               <h2 className={styles.dashboard__title}>Recent Emails</h2>
               <button
@@ -212,14 +197,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 disabled={isSyncing}
                 className={styles.dashboard__syncButton}
               >
-                <RefreshCw
-                  className={clsx(styles.dashboard__iconSm, {
-                    [styles['dashboard__icon--spin']]: isSyncing,
-                  })}
-                />
-                <span className={styles.dashboard__syncText}>
-                  {isSyncing ? 'Syncing...' : 'Sync Gmail'}
-                </span>
+                <RefreshCw className={`${styles.dashboard__iconSm} ${isSyncing ? styles['dashboard__icon--spin'] : ''}`} />
+                <span className={styles.dashboard__syncText}>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
               </button>
             </div>
             <RecentEmailsList onSync={handleGmailSync} isSyncing={isSyncing} />
@@ -228,12 +207,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
       case 'calendar':
         return (
-          <div className={styles.dashboard__calendar}>
-            <div className={styles.dashboard__calendarIcon}>
-              <Calendar />
+          <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] text-center">
+            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
+              <Calendar className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             </div>
-            <h2 className={styles.dashboard__title}>Calendar Coming Soon</h2>
-            <p className={styles.dashboard__mutedText}>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Calendar Coming Soon</h2>
+            <p className="text-gray-500 dark:text-gray-400 max-w-sm">
               We're working hard to bring you a fully integrated calendar view. Stay tuned!
             </p>
           </div>
@@ -242,25 +221,53 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'settings':
       case 'account':
         return (
-          <div className={clsx(styles.dashboard__section, styles.dashboard__sectionNarrow)}>
-            <div className={styles.dashboard__header}>
-              <h2 className={styles.dashboard__title}>Account Settings</h2>
+          <div className={`max-w-4xl ${isMobile ? 'space-y-4' : 'space-y-8'}`}>
+            <div className="flex items-center justify-between">
+              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white`} style={{ paddingLeft: isMobile ? '2px' : '0' }}>Account Settings</h2>
+              {/* Only show theme toggle in Account Settings on mobile/tablet */}
+              {onToggleTheme && isMobile && (
+                <button
+                  onClick={onToggleTheme}
+                  className="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border transition-all hover:scale-110 group"
+                  aria-label="Toggle theme"
+                  style={{
+                    backgroundColor: isDarkMode ? '#FFF' : '#232F3F',
+                    borderColor: isDarkMode ? '#232F3F' : '#FFF'
+                  }}
+                >
+                  {isDarkMode ? (
+                    <Sun className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" style={{ color: '#232F3F' }} />
+                  ) : (
+                    <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" style={{ color: '#FFF' }} />
+                  )}
+                </button>
+              )}
             </div>
 
-            <div className={styles.dashboard__card}>
-              <div className={styles.dashboard__cardHeader}>
-                <h3>Profile Information</h3>
-                <p>Update your account's profile information and email address.</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Profile Information</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Update your account's profile information and email address.</p>
               </div>
-              <div className={styles.dashboard__cardBody}>
-                <div className={styles.dashboard__grid}>
-                  <div className={styles.dashboard__field}>
-                    <label>Full Name</label>
-                    <input type="text" value={user?.name || ''} readOnly />
+              <div className="p-6 space-y-8">
+                <div className="responsive-grid">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                    <input
+                      type="text"
+                      value={user?.name || ''}
+                      readOnly
+                      className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
+                    />
                   </div>
-                  <div className={styles.dashboard__field}>
-                    <label>Email Address</label>
-                    <input type="text" value={user?.email || ''} readOnly />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                    <input
+                      type="text"
+                      value={user?.email || ''}
+                      readOnly
+                      className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
+                    />
                   </div>
                 </div>
               </div>
@@ -274,43 +281,35 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   };
 
   return (
-    <div
-      className={clsx(styles.dashboard, {
-        [styles['dashboard--mobile']]: isMobile,
-        [styles['dashboard--desktop']]: !isMobile,
-      })}
-    >
+    <div className={`flex min-h-screen bg-gray-50 dark:bg-gray-900 ${isMobile ? 'mobile-view' : 'desktop-view'}`}>
       {/* Mobile Header - fixed at top */}
       {isMobile && (
-        <header className={styles.dashboard__mobileHeader}>
-          <div className={styles.dashboard__mobileContent}>
+        <header className="mobile-header">
+          <div className="mobile-header__content">
             <button
               type="button"
-              className={styles.dashboard__mobileIcon}
+              className="mobile-header__icon-button"
               aria-label="Open menu"
+              style={{ visibility: 'hidden' }}
             >
-              <Menu className={styles.dashboard__iconSm} />
+              <Menu className="w-5 h-5" />
             </button>
-            <button
-              type="button"
-              className={styles.dashboard__mobileIcon}
+            <div
+
+              // className="mobile-header__icon-button"
               aria-label="Go to overview"
               onClick={() => setCurrentView('overview')}
             >
-              <Home className={styles.dashboard__iconSm} />
-            </button>
+              <img src={logo} alt="Logo" />
+            </div>
             <button
               type="button"
-              className={styles.dashboard__mobileIcon}
+              className="mobile-header__icon-button"
               aria-label="Sync Gmail"
               onClick={handleGmailSync}
               disabled={isSyncing}
             >
-              <RefreshCw
-                className={clsx(styles.dashboard__iconSm, {
-                  [styles['dashboard__icon--spin']]: isSyncing,
-                })}
-              />
+              <RefreshCw className={`w-5 h-5 ${isSyncing ? 'animate-spin' : ''}`} />
             </button>
           </div>
         </header>
@@ -325,8 +324,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         />
       )}
 
-      <main className={styles.dashboard__main}>
-        <div className={styles.dashboard__content}>
+      <main className="flex-1 min-w-0 transition-all duration-300">
+        <div className={`max-w-[1440px] mx-auto ${isMobile ? 'p-4' : 'p-4 sm:p-6 lg:p-6'} ${isMobile ? 'mt-2' : 'mt-6'}`}>
           {renderContent()}
         </div>
       </main>

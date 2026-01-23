@@ -282,10 +282,10 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .mobile-header {
+    /* .mobile-header {
         background-color: #111827;
         border-bottom-color: #374151;
-    }
+    } */
 
     .mobile-header__icon-button {
         background-color: #1f2937;
