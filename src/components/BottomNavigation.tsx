@@ -21,7 +21,7 @@ export function BottomNavigation({
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'applications', label: 'Applications', icon: Briefcase },
-    { id: 'add', label: 'Add', icon: Plus, isAdd: true },
+    { id: 'add', label: '', icon: Plus, isAdd: true },
     { id: 'emails', label: 'Emails', icon: Mail },
     { id: 'account', label: 'Account', icon: UserIcon },
   ];
@@ -39,7 +39,7 @@ export function BottomNavigation({
       {navItems.map((item) => {
         const Icon = item.icon;
         // Map account to settings for active state - check for both 'account' and 'settings'
-        const isActive = item.id === 'account' 
+        const isActive = item.id === 'account'
           ? (currentView === 'settings' || currentView === 'account') && !item.isAdd
           : currentView === item.id && !item.isAdd;
         const isAddButton = item.isAdd;
