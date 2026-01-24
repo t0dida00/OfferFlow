@@ -10,9 +10,10 @@ interface ApplicationDetailsModalProps {
     application: Application;
     onClose: () => void;
     onSave: (_id: string, updates: Partial<Application>) => void;
+    isSaving?: boolean;
 }
 
-export function ApplicationDetailsModal({ application, onClose, onSave }: ApplicationDetailsModalProps) {
+export function ApplicationDetailsModal({ application, onClose, onSave, isSaving = false }: ApplicationDetailsModalProps) {
     const queryClient = useQueryClient();
     const [formData, setFormData] = useState({
         company: application.company,
@@ -185,13 +186,15 @@ export function ApplicationDetailsModal({ application, onClose, onSave }: Applic
                         type="button"
                         onClick={onClose}
                         className={styles.appDetailsModal__footerButton}
+                        disabled={isSaving}
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         form="edit-form"
-                        className={`${styles.appDetailsModal__footerButton} ${styles['appDetailsModal__footerButton--primary']}`}
+                        disabled={isSaving}
+                        className={`${styles.appDetailsModal__footerButton} ${styles['appDetailsModal__footerButton--primary']} ${isSaving ? 'opacity-75 cursor-not-allowed' : ''}`}
                     >
                         Save Changes
                     </button>

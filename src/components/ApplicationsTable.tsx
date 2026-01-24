@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { Application } from '../types';
 import { ApplicationDetailsModal } from './ApplicationDetailsModal';
+import { StatusModal } from './StatusModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateApplication } from '../services/api';
 import styles from './ApplicationsTable.module.scss';
@@ -28,6 +29,7 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [statusModal, setStatusModal] = useState<{ type: 'success' | 'error' | 'loading', title: string, message: string } | null>(null);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 767);
   const queryClient = useQueryClient();
@@ -38,14 +40,41 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const { mutate: handleUpdateApp } = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Application> }) => updateApplication(id, data),
+  const { mutate: handleUpdateApp, isPending: isSaving } = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<Application> }) => {
+      const start = Date.now();
+      const result = await updateApplication(id, data);
+      const elapsed = Date.now() - start;
+      if (elapsed < 2000) {
+        await new Promise(resolve => setTimeout(resolve, 2000 - elapsed));
+      }
+      return result;
+    },
+    onMutate: () => {
+      setStatusModal({
+        type: 'loading',
+        title: 'Updating Application',
+        message: 'Please wait while we update your application details...'
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
+      // Keep loading state visible for at least a moment or switch immediately? 
+      // Usually immediate switch is fine.
       setSelectedApp(null);
+      setStatusModal({
+        type: 'success',
+        title: 'Update Successful',
+        message: 'The application details have been successfully updated.'
+      });
     },
     onError: (error) => {
       console.error("Failed to update application", error);
+      setStatusModal({
+        type: 'error',
+        title: 'Update Failed',
+        message: 'Failed to update application. Please try again.'
+      });
     }
   });
 
@@ -315,6 +344,16 @@ export function ApplicationsTable({ applications }: ApplicationsTableProps) {
           application={selectedApp}
           onClose={() => setSelectedApp(null)}
           onSave={(id, updates) => handleUpdateApp({ id, data: updates })}
+          isSaving={isSaving}
+        />
+      )}
+
+      {statusModal && (
+        <StatusModal
+          type={statusModal.type}
+          title={statusModal.title}
+          message={statusModal.message}
+          onClose={() => setStatusModal(null)}
         />
       )}
     </div>
