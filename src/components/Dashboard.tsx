@@ -6,7 +6,6 @@ import {
   Moon,
   Sun,
   Menu,
-  Home,
   LogOut
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,6 +14,7 @@ import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
 import { RecentEmailsList } from './RecentEmailsList';
 import { RecentApplicationsList } from './RecentApplicationsList';
+import { SyncSuccessModal } from './SyncSuccessModal';
 import { Sidebar } from './Sidebar';
 import { BottomNavigation } from './BottomNavigation';
 import { fetchApplications, syncGmail } from '../services/api';
@@ -35,6 +35,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
   const queryClient = useQueryClient();
   const [currentView, setCurrentView] = useState('overview');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSyncSuccessModalOpen, setIsSyncSuccessModalOpen] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(user?.lastSyncTime ? new Date(user.lastSyncTime) : null);
   // Initialize with a check to avoid flash of sidebar on mobile
   const [isMobile, setIsMobile] = useState(() => {
@@ -91,6 +92,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
       queryClient.invalidateQueries({ queryKey: ['applications'] });
       queryClient.invalidateQueries({ queryKey: ['emails'] });
       setLastSync(new Date());
+      setIsSyncSuccessModalOpen(true);
     },
     onError: (error) => {
       console.error('Failed to sync Gmail:', error);
@@ -347,6 +349,11 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
       {/* Add Application Modal */}
       {isAddModalOpen && (
         <AddApplicationModal onClose={() => setIsAddModalOpen(false)} />
+      )}
+
+      {/* Sync Success Modal */}
+      {isSyncSuccessModalOpen && (
+        <SyncSuccessModal onClose={() => setIsSyncSuccessModalOpen(false)} />
       )}
     </div>
   );
