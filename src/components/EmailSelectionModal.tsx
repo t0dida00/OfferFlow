@@ -70,8 +70,7 @@ export function EmailSelectionModal({ isOpen, onClose, allEmails, selectedEmailI
             onClose();
         }}>
             <div
-                className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full flex flex-col"
-                style={{ maxWidth: '768px', maxHeight: '70dvh', overflowY: 'auto' }}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full flex flex-col max-w-[768px] max-h-[50dvh] md:max-h-[70dvh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
