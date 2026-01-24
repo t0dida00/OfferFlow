@@ -75,8 +75,17 @@
         cursor: pointer;
         transition: background-color 0.2s;
 
+        @include dark {
+            background-color: #FFF;
+            color: #232F3F;
+        }
+
         &:hover {
             background-color: #1a2330;
+
+            @include dark {
+                background-color: #f0f0f0;
+            }
         }
     }
 }
