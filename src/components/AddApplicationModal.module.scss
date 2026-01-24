@@ -175,6 +175,11 @@
     font-size: $text-base;
     font-weight: 500;
 
+    @include dark {
+      background-color: #FFF;
+      color: #232F3F;
+    }
+
     &:hover {
       opacity: 0.85;
     }
