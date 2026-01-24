@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from './components/LoginPage';
 import { Dashboard } from './components/Dashboard';
+import { LandingPage } from './components/LandingPage';
 import { ThemeToggle } from './components/ThemeToggle';
 import { LoginSuccess } from './components/LoginSuccess';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -82,6 +83,12 @@ export default function App() {
             <Route
               path="/"
               element={
+                isLoggedIn ? <Navigate to="/dashboard" replace /> : <LandingPage isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+              }
+            />
+            <Route
+              path="/login"
+              element={
                 isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginPage />
               }
             />
@@ -105,7 +112,7 @@ export default function App() {
           </Routes>
         </div>
         <Footer />
-        {/* ThemeToggle hiển thị trên tất cả các trang, cả mobile và desktop */}
+        {/* ThemeToggle displayed on all pages */}
         <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
       </div>
     </BrowserRouter>

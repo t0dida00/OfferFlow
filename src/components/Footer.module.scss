@@ -24,6 +24,12 @@
         padding-bottom: calc($spacing-2 + 60px + env(safe-area-inset-bottom, 0px));
     }
 
+    &--no-nav {
+        @media (max-width: 1024px) {
+            padding-bottom: $spacing-2 !important;
+        }
+    }
+
     &__content {
         width: 100%;
         // max-width: 1200px;
