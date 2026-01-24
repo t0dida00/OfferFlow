@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './LoginSuccess.module.scss';
 
 interface LoginSuccessProps {
-    onLogin: (token: string) => void;
+    onLogin: (token: string) => Promise<void>;
 }
 
 export function LoginSuccess({ onLogin }: LoginSuccessProps) {
@@ -11,15 +11,19 @@ export function LoginSuccess({ onLogin }: LoginSuccessProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = searchParams.get('token');
+        const authenticate = async () => {
+            const token = searchParams.get('token');
 
-        if (token) {
-            onLogin(token);
-            navigate('/dashboard');
-        } else {
-            console.error("Missing token in URL params");
-            navigate('/');
-        }
+            if (token) {
+                await onLogin(token);
+                navigate('/dashboard');
+            } else {
+                console.error("Missing token in URL params");
+                navigate('/');
+            }
+        };
+
+        authenticate();
     }, [searchParams, navigate, onLogin]);
 
     return (
