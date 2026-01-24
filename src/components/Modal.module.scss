@@ -13,6 +13,7 @@
     padding: $spacing-4;
     overflow-y: auto;
   }
+
   &__overlay {
     position: fixed; //  fixed instead of absolute to overlay header
     inset: 0;
@@ -40,6 +41,11 @@
 
     @media (min-width: 768px) {
       max-width: 768px;
+    }
+
+    @media (max-width: 768px) {
+      max-height: 60vh;
+      height: 60vh;
     }
 
     @include dark {
@@ -128,4 +134,3 @@
     }
   }
 }
-
