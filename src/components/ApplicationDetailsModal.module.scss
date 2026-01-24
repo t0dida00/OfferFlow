@@ -98,7 +98,7 @@
     padding: $spacing-6;
     background: $gray-50;
     overflow-y: auto;
-    max-height: 300px;
+    // max-height: 300px;
 
     @include dark {
       background: $gray-900;
@@ -306,4 +306,3 @@
     }
   }
 }
-
