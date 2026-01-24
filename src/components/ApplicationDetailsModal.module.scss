@@ -85,7 +85,7 @@
       width: 1.125rem;
       height: 1.125rem;
       color: $gray-500;
-      
+
       @include dark {
         color: #E5E7EB;
       }
@@ -250,6 +250,12 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: $spacing-2;
+
+    @media (max-width: 550px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-1;
+    }
   }
 
   &__emailSubject {
@@ -280,6 +286,12 @@
     gap: $spacing-2;
     color: $gray-500;
     white-space: nowrap;
+
+    @media (max-width: 550px) {
+      order: -1;
+      width: 100%;
+      justify-content: space-between;
+    }
 
     svg {
       width: 0.75rem;
