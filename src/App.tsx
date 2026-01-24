@@ -5,6 +5,7 @@ import { Dashboard } from './components/Dashboard';
 import { ThemeToggle } from './components/ThemeToggle';
 import { LoginSuccess } from './components/LoginSuccess';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { Footer } from './components/Footer';
 import { User } from './types';
 import { fetchCurrentUser } from './services/api';
 
@@ -75,32 +76,35 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginPage />
-            }
-          />
-          <Route
-            path="/login-success"
-            element={<LoginSuccess onLogin={handleLogin} />}
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <Dashboard
-                  user={user}
-                  onLogout={handleLogout}
-                  isDarkMode={isDarkMode}
-                  onToggleTheme={toggleTheme}
-                />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 flex flex-col">
+        <div className="flex-1">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginPage />
+              }
+            />
+            <Route
+              path="/login-success"
+              element={<LoginSuccess onLogin={handleLogin} />}
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <Dashboard
+                    user={user}
+                    onLogout={handleLogout}
+                    isDarkMode={isDarkMode}
+                    onToggleTheme={toggleTheme}
+                  />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+        <Footer />
         {/* ThemeToggle hiển thị trên tất cả các trang, cả mobile và desktop */}
         <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
       </div>
