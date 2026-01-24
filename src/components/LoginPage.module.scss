@@ -351,7 +351,7 @@
     transform: none !important;
     opacity: 1 !important;
     z-index: 1 !important;
-    height: auto !important;
+    height: 25dvh !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -372,7 +372,7 @@
     top: auto !important;
     transform: none !important;
     flex: 0 0 auto;
-    min-height: 240px;
+    min-height: 25dvh;
   }
 
   .slidePanel {
@@ -384,7 +384,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 280px;
+    min-height: 25dvh;
   }
 
   .panelContent {
@@ -459,11 +459,11 @@
     padding: 10px;
   }
 
-  .authWrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-shadow: none;
-  }
+  // .authWrapper {
+  //   width: 100% !important;
+  //   max-width: 100% !important;
+  //   box-shadow: none;
+  // }
 
   .authWrapper form {
     padding: 20px 10px;
