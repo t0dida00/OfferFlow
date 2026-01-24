@@ -80,7 +80,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
     }
   };
 
-  const { data: rawApplications } = useQuery({
+  const { data: rawApplications, isLoading } = useQuery({
     queryKey: ['applications'],
     queryFn: fetchApplications,
   });
@@ -135,9 +135,13 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
               </div>
             </div>
 
-            {applications.length === 0 ? (
+            {isLoading ? (
               <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
-                <div className="text-2xl font-semibold dark:text-white mb-2">No Data</div>
+                <div className="text-2xl font-semibold dark:text-white">Data loading</div>
+              </div>
+            ) : applications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700">
+                <div className="text-2xl font-semibold dark:text-white mb-2">No data</div>
                 <p className="text-gray-500 dark:text-gray-400 mb-6">Sync your Gmail to get started tracking your job applications.</p>
                 <button
                   onClick={handleGmailSync}
