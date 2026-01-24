@@ -1,0 +1,468 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.landing {
+    min-height: 100vh;
+    background-color: $gray-50;
+    color: $gray-900;
+    overflow-x: hidden;
+
+    @include dark {
+        background-color: $gray-900;
+        color: $white;
+    }
+}
+
+.hero {
+    position: relative;
+    padding: 160px $spacing-4 100px;
+    text-align: center;
+    overflow: hidden;
+
+    &__bg {
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: 100vh;
+        background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 50%);
+        pointer-events: none;
+        z-index: 0;
+
+        @include dark {
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, rgba(0, 0, 0, 0) 60%);
+        }
+    }
+
+    &__content {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        padding: $spacing-2 $spacing-4;
+        background-color: rgba(59, 130, 246, 0.1);
+        color: $blue-600;
+        border-radius: $rounded-full;
+        font-size: $text-sm;
+        font-weight: 600;
+        margin-bottom: $spacing-6;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+
+        @include dark {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: $blue-400;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+    }
+
+    &__title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: $spacing-6;
+        background: linear-gradient(to right, $gray-900, $gray-600);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.02em;
+
+        @include dark {
+            background: linear-gradient(to right, $white, $gray-400);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @media (min-width: 768px) {
+            font-size: 5rem;
+        }
+    }
+
+    &__subtitle {
+        font-size: $text-lg;
+        color: $gray-500;
+        margin-bottom: $spacing-8;
+        line-height: 1.6;
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+
+        @include dark {
+            color: $gray-400;
+        }
+
+        @media (min-width: 768px) {
+            font-size: $text-xl;
+        }
+    }
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-4 $spacing-12;
+        background-color: $gray-900;
+        color: $white;
+        border-radius: $rounded-full;
+        font-weight: 600;
+        font-size: $text-lg;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background-color: $black;
+        }
+
+        @include dark {
+            background-color: $white;
+            color: $gray-900;
+
+            &:hover {
+                background-color: $gray-100;
+            }
+        }
+    }
+}
+
+.features {
+    padding: $spacing-12 $spacing-4;
+    position: relative;
+    background-color: $white;
+
+    @include dark {
+        background-color: $gray-900;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $spacing-8;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    &__card {
+        background: $gray-50;
+        border: 1px solid rgba(229, 231, 235, 1);
+        border-radius: $rounded-2xl;
+        padding: $spacing-8;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, $blue-400, $blue-600);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            transform: translateY(-4px);
+            background: $white;
+            border-color: rgba(229, 231, 235, 0.8);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+            &::before {
+                opacity: 1;
+            }
+        }
+
+        @include dark {
+            background: rgba(31, 41, 55, 0.3);
+            border-color: rgba(55, 65, 81, 0.5);
+
+            &:hover {
+                background: rgba(31, 41, 55, 0.5);
+                border-color: rgba(55, 65, 81, 0.8);
+            }
+        }
+    }
+
+    &__iconWrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: $rounded-2xl;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: $spacing-6;
+
+        &--blue {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: $blue-600;
+
+            @include dark {
+                color: $blue-400;
+            }
+        }
+
+        &--purple {
+            background-color: rgba(147, 51, 234, 0.1);
+            color: #9333ea;
+
+            @include dark {
+                color: #a855f7;
+            }
+        }
+
+        &--green {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: $green-600;
+
+            @include dark {
+                color: #4ade80;
+            }
+        }
+    }
+
+    &__cardTitle {
+        font-size: $text-2xl;
+        font-weight: 700;
+        margin-bottom: $spacing-3;
+        color: $gray-900;
+
+        @include dark {
+            color: $white;
+        }
+    }
+
+    &__cardText {
+        font-size: $text-base;
+        color: $gray-500;
+        line-height: 1.6;
+
+        @include dark {
+            color: $gray-400;
+        }
+    }
+}
+
+.howItWorks {
+    padding: 100px $spacing-4;
+    background-color: $gray-50;
+
+    @include dark {
+        background-color: $black;
+    }
+
+    &__container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    &__title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: $spacing-12;
+        color: $gray-900;
+        line-height: 1.2;
+
+        @include dark {
+            color: $white;
+        }
+
+        @media (min-width: 768px) {
+            font-size: 3rem;
+        }
+    }
+
+    &__step {
+        display: flex;
+        align-items: center;
+        gap: $spacing-8;
+        margin-bottom: $spacing-12;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            text-align: center;
+            gap: $spacing-4;
+        }
+
+        &:nth-child(even) {
+            flex-direction: row-reverse;
+
+            @media (max-width: 768px) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    &__stepNumber {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: $gray-900;
+        color: $white;
+        font-weight: 700;
+        font-size: $text-xl;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: $spacing-4;
+
+        @media (min-width: 768px) {
+            margin-bottom: 0;
+        }
+
+        @include dark {
+            background-color: $white;
+            color: $black;
+        }
+    }
+
+    &__stepContent {
+        flex: 1;
+    }
+
+    &__stepTitle {
+        font-size: $text-2xl;
+        font-weight: 700;
+        margin-bottom: $spacing-2;
+        color: $gray-900;
+
+        @include dark {
+            color: $white;
+        }
+    }
+
+    &__stepDesc {
+        font-size: $text-lg;
+        color: $gray-500;
+        line-height: 1.6;
+
+        @include dark {
+            color: $gray-400;
+        }
+    }
+}
+
+.cta {
+    padding: 100px $spacing-4;
+    text-align: center;
+    background-color: #232F3F;
+    color: #FFF;
+    position: relative;
+    overflow: hidden;
+
+    &__content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    &__title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: $spacing-6;
+        color: #FFF;
+        line-height: 1.2;
+
+        @media (min-width: 768px) {
+            font-size: 3.5rem;
+        }
+    }
+
+    &__text {
+        font-size: $text-xl;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: $spacing-8;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        padding: $spacing-4 $spacing-8;
+        background-color: #FFF;
+        color: #232F3F;
+        font-weight: 700;
+        border-radius: $rounded-full;
+        text-decoration: none;
+        transition: all 0.2s;
+
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background-color: #f3f4f6;
+            color: #232F3F;
+        }
+    }
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-4 $spacing-6;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        font-weight: 700;
+        font-size: $text-xl;
+        color: $gray-900;
+
+        @include dark {
+            color: $white;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    &__login {
+        font-weight: 600;
+        color: $gray-900;
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $blue-600;
+        }
+
+        @include dark {
+            color: $white;
+
+            &:hover {
+                color: $blue-400;
+            }
+        }
+    }
+}
