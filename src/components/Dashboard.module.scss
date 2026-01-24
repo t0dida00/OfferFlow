@@ -305,7 +305,7 @@
     border-radius: $rounded-lg;
     border: none;
     background-color: #232F3F;
-    color: $white;
+    color: #FFF;
     font-weight: 500;
     cursor: pointer;
     transition: opacity 0.2s;
@@ -317,6 +317,15 @@
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    @include dark {
+      background-color: #FFF;
+      color: #232F3F;
+
+      &:hover {
+        opacity: 0.85;
+      }
     }
   }
 
@@ -453,7 +462,7 @@
   }
 
   &__sectionNarrow {
-    max-width: 64rem; // 1024px
+    max-width: 100%;
 
     // Limit width of card in narrow section to prevent stretching
     .dashboard__card {
