@@ -14,6 +14,7 @@
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   padding: 20px;
+  width: 100%;
 }
 
 .authWrapper {
@@ -26,6 +27,7 @@
   max-width: 100%;
   min-height: 550px;
   color: #232F3F;
+  display: flex;
 
   h1 {
     font-weight: 700;
@@ -188,6 +190,11 @@
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
+
+  @media (max-width: 766px) {
+    position: static !important;
+    transition: none !important;
+  }
 }
 
 .loginFormBox {
@@ -212,6 +219,11 @@
   overflow: hidden;
   transition: transform 0.6s ease-in-out;
   z-index: 100;
+
+  @media (max-width: 766px) {
+    position: static !important;
+    transition: none !important;
+  }
 }
 
 .slidePanel {
@@ -312,12 +324,22 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 766px) {
+  .loginPage {
+    min-height: 100vh;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
   .authWrapper {
+    display: flex;
+    flex-direction: column;
     min-height: auto;
     width: 100%;
     max-width: 100%;
     border-radius: 15px;
+    overflow: hidden;
   }
 
   .authFormBox {
@@ -325,6 +347,10 @@
     width: 100% !important;
     transform: none !important;
     opacity: 1 !important;
+    order: 2;
+    height: auto !important;
+    flex: 0 1 auto;
+    display: flex;
   }
 
   .loginFormBox,
@@ -335,6 +361,10 @@
     transform: none !important;
     opacity: 1 !important;
     z-index: 1 !important;
+    height: 25dvh !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .registerFormBox {
@@ -342,18 +372,79 @@
   }
 
   .slidePanelWrapper {
-    display: none !important;
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    order: 1;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    flex: 0 0 auto;
+    min-height: 25dvh;
+  }
+
+  .slidePanel {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    left: auto !important;
+    transform: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 25dvh;
+  }
+
+  .panelContent {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    padding: 25px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    p {
+      margin: 10px 0 0 0 !important;
+      font-size: 14px;
+    }
+  }
+
+  .panelContentLeft,
+  .panelContentRight {
+    transform: none !important;
   }
 
   .authWrapper form {
-    padding: 30px 25px;
+    padding: 75px 20px;
     position: static;
     height: auto;
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    span {
+      font-size: 12px;
+    }
+  }
+
+  .socialLinks {
+    margin: 15px 0;
   }
 
   .mobileSwitch {
     display: block;
-    margin-top: 20px;
+    margin-top: 15px;
     color: #667eea;
     font-size: 14px;
 
@@ -378,11 +469,11 @@
     padding: 10px;
   }
 
-  .authWrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-shadow: none;
-  }
+  // .authWrapper {
+  //   width: 100% !important;
+  //   max-width: 100% !important;
+  //   box-shadow: none;
+  // }
 
   .authWrapper form {
     padding: 20px 10px;

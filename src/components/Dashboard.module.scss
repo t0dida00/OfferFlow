@@ -181,8 +181,7 @@
     }
   }
 
-  &__syncButton:hover,
-  &__addButton:hover {
+  &__syncButton:hover {
     background-color: $gray-50;
 
     @include dark {
@@ -198,6 +197,10 @@
     @include dark {
       background-color: #FFF;
       color: #232F3F;
+    }
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 
