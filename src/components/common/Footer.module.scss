@@ -1,0 +1,121 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.footer {
+    width: 100%;
+    height: 40px;
+    padding: 0 $spacing-4;
+    background-color: $white;
+    border-top: 1px solid $gray-200;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+
+    @include dark {
+        background-color: $gray-900;
+        border-top-color: $gray-800;
+    }
+
+    // Mobile: Auto height + padding for bottom nav
+    @media (max-width: 1024px) {
+        height: auto;
+        min-height: 40px;
+        padding-top: $spacing-2;
+        padding-bottom: calc($spacing-2 + 60px + env(safe-area-inset-bottom, 0px));
+    }
+
+    &--no-nav {
+        @media (max-width: 1024px) {
+            padding-bottom: $spacing-2 !important;
+        }
+    }
+
+    &__content {
+        width: 100%;
+        // max-width: 1200px;
+        // margin: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; // Pushes content (links) to the right
+        position: relative; // For absolute centering of copyright
+
+        @media (max-width: 1024px) {
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            gap: $spacing-2;
+            padding-bottom: $spacing-1;
+        }
+
+        @media (max-width: 550px) {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+
+    &__placeholder {
+        @media (max-width: 1024px) {
+            display: none;
+        }
+    }
+
+    &__copyright {
+        color: $gray-500;
+        font-size: $text-sm;
+        text-align: center;
+
+        // Absolute centering for desktop
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+
+        @media (max-width: 1024px) {
+            position: static;
+            transform: none;
+            order: 1; // Copyright below links or based on preference? Usually copyright is last.
+            // But user said "middle of footer". On mobile stack, order depends on preference.
+            // Let's keep DOM order: Copyright then Links.
+            // If flex-col, Copyright is top, Links bottom?
+            // Usually Copyright is at the very bottom on mobile.
+            order: 1;
+        }
+
+        @include dark {
+            color: $gray-400;
+        }
+    }
+
+    &__links {
+        display: flex;
+        align-items: center;
+        gap: $spacing-6;
+
+        // @media (max-width: 768px) {
+        //     order: 2; // Links above copyright on mobile? Or standard stack.
+        //     // Let's check standard. Usually Links then Copyright at bottom.
+        //     flex-wrap: wrap;
+        //     justify-content: center;
+        //     gap: $spacing-4;
+        // }
+    }
+
+    &__link {
+        color: $gray-500;
+        font-size: $text-sm;
+        text-decoration: none;
+        transition: color 0.2s;
+        white-space: nowrap;
+
+        &:hover {
+            color: $blue-600;
+
+            @include dark {
+                color: $white;
+            }
+        }
+
+        @include dark {
+            color: $gray-400;
+        }
+    }
+}

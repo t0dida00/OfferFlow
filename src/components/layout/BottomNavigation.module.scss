@@ -1,0 +1,173 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: $white;
+  // border-top: 1px solid #e7e8ea;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  // padding: 0 $spacing-2;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+
+  @include dark {
+    background-color: $gray-800;
+    border-top-color: $gray-700;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-1;
+    padding: $spacing-2;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $gray-500;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 60px;
+    max-width: 100px;
+
+    &:hover {
+      color: $gray-900;
+    }
+
+    @include dark {
+      color: $gray-400;
+
+      &:hover {
+        color: $white;
+      }
+    }
+
+    &--active {
+      background-color: #232F3F !important;
+      color: #FFF !important;
+      font-weight: 600;
+      // border-radius: $rounded-lg;
+
+      @include dark {
+        background-color: #FFF !important;
+        color: #232F3F !important;
+      }
+
+      .bottomNav__icon {
+        color: #FFF !important;
+
+        @include dark {
+          color: #232F3F !important;
+        }
+      }
+
+      .bottomNav__label {
+        color: #FFF !important;
+
+        @include dark {
+          color: #232F3F !important;
+        }
+      }
+    }
+
+    &--add {
+      .bottomNav__icon {
+        width: 24px;
+        height: 24px;
+        padding: 8px;
+        background-color: $gray-200;
+        border-radius: $rounded-lg;
+        color: $gray-600;
+        box-sizing: content-box;
+
+        @include dark {
+          background-color: $gray-700;
+          color: $gray-300;
+        }
+      }
+
+      &.bottomNav__item--active .bottomNav__icon {
+        background-color: #232F3F;
+        color: $white;
+
+        @include dark {
+          background-color: $white;
+          color: #232F3F;
+        }
+      }
+    }
+  }
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  &__label {
+    font-size: 0.625rem; // 10px
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  /* Responsive: small screens < 360px */
+  @media (max-width: 360px) {
+    // padding: 0 $spacing-1;
+    gap: 0;
+
+    &__item {
+      padding: $spacing-1;
+      gap: 0.25rem;
+      // min-height: 56px;
+    }
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &__label {
+      font-size: 0.5rem; // 8px
+    }
+  }
+
+  /* Responsive: very small screens < 320px */
+  @media (max-width: 320px) {
+    // padding: 0 0.25rem;
+
+    &__item {
+      padding: 0.25rem;
+      // min-height: 52px;
+    }
+
+    &__icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    &__label {
+      font-size: 0.45rem; // ~7px
+      letter-spacing: 0;
+    }
+
+    &__item--add .bottomNav__icon {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+    }
+  }
+}
