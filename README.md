@@ -40,8 +40,8 @@ Follow these steps to set up the project locally:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/jlog.git
-    cd jlog
+    git clone https://github.com/t0dida00/OfferFlow.git
+    cd OfferFlow
     ```
 
 2.  **Install dependencies:**
