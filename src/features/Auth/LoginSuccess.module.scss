@@ -1,0 +1,45 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.loginSuccess {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $gray-50;
+
+  @include dark {
+    background: $gray-900;
+  }
+
+  &__content {
+    text-align: center;
+  }
+
+  &__spinner {
+    width: 3rem; // h-12
+    height: 3rem; // h-12
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom-color: $blue-600;
+    animation: spin 1s linear infinite;
+    margin: 0 auto $spacing-4; // mx-auto mb-4
+  }
+
+  &__title {
+    font-size: $text-xl;
+    font-weight: 600; // font-semibold
+    color: $gray-900;
+
+    @include dark {
+      color: $white;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
