@@ -12,6 +12,7 @@ import { ApplicationsPage } from './pages/Applications';
 import { EmailsPage } from './pages/Emails';
 import { CalendarPage } from './pages/Calendar';
 import { SettingsPage } from './pages/Settings';
+import { CoverLetterPage } from './pages/CoverLetter';
 import { User } from './types';
 import { fetchCurrentUser } from './services/api';
 
@@ -117,6 +118,7 @@ export default function App() {
               <Route path="/applications" element={<ApplicationsPage />} />
               <Route path="/emails" element={<EmailsPage />} />
               <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/cover-letter" element={<CoverLetterPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/account" element={<SettingsPage />} />
               <Route path="/dashboard" element={<Navigate to="/overview" replace />} />

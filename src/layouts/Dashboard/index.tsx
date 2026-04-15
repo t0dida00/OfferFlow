@@ -158,7 +158,6 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
         <BottomNavigation
           currentView={currentView === 'settings' ? 'account' : currentView}
           onNavigate={handleNavigate}
-          onAddClick={() => setIsAddModalOpen(true)}
         />
       )}
 

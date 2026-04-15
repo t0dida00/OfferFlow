@@ -5,7 +5,8 @@ import {
     Calendar,
     Settings,
     LogOut,
-    User as UserIcon
+    User as UserIcon,
+    FileText
 } from 'lucide-react';
 import { User } from '../../types';
 import styles from './Sidebar.module.scss';
@@ -30,6 +31,7 @@ export function Sidebar({
         { id: 'applications', label: 'Applications', icon: Briefcase },
         { id: 'emails', label: 'Emails', icon: Mail },
         { id: 'calendar', label: 'Calendar', icon: Calendar },
+        { id: 'cover-letter', label: 'My Cover Letter', icon: FileText },
     ];
 
     const supportNavItems = [
