@@ -110,7 +110,7 @@
 
   &__value {
     font-size: 1.875rem; // text-3xl
-    font-weight: 700; // font-bold
+    font-weight: 700; // was 600
     color: $gray-900;
 
     @include dark {

@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { LoginPage } from './components/LoginPage';
-import { Dashboard } from './components/Dashboard';
-import { LandingPage } from './components/LandingPage';
+import { LoginPage } from './pages/Login';
+import { Dashboard } from './layouts/Dashboard';
+import { LandingPage } from './pages/Landing';
 import { ThemeToggle } from './components/ThemeToggle';
-import { LoginSuccess } from './components/LoginSuccess';
+import { LoginSuccess } from './pages/LoginSuccess';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Footer } from './components/Footer';
+import { OverviewPage } from './pages/Overview';
+import { ApplicationsPage } from './pages/Applications';
+import { EmailsPage } from './pages/Emails';
+import { CalendarPage } from './pages/Calendar';
+import { SettingsPage } from './pages/Settings';
 import { User } from './types';
 import { fetchCurrentUser } from './services/api';
 
@@ -97,7 +102,6 @@ export default function App() {
               element={<LoginSuccess onLogin={handleLogin} />}
             />
             <Route
-              path="/dashboard"
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <Dashboard
@@ -108,7 +112,15 @@ export default function App() {
                   />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="/overview" element={<OverviewPage />} />
+              <Route path="/applications" element={<ApplicationsPage />} />
+              <Route path="/emails" element={<EmailsPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/account" element={<SettingsPage />} />
+              <Route path="/dashboard" element={<Navigate to="/overview" replace />} />
+            </Route>
           </Routes>
         </div>
         <Footer />
