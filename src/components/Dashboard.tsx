@@ -13,6 +13,7 @@ import { ApplicationsTable } from './ApplicationsTable';
 import { ChartsSection } from './ChartsSection';
 import { AddApplicationModal } from './AddApplicationModal';
 import { RecentEmailsList } from './RecentEmailsList';
+import { EmailsTable } from './EmailsTable';
 import { RecentApplicationsList } from './RecentApplicationsList';
 import { SyncSuccessModal } from './SyncSuccessModal';
 import { Sidebar } from './Sidebar';
@@ -198,7 +199,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
         return (
           <div className={`${isMobile ? 'space-y-4' : 'space-y-8'}`}>
             <div className={styles.dashboard__header}>
-              <h2 className={styles.dashboard__title}>Recent Emails</h2>
+              <h2 className={styles.dashboard__title}>Emails</h2>
               <button
                 onClick={handleGmailSync}
                 disabled={isSyncing}
@@ -208,7 +209,7 @@ export function Dashboard({ user, onLogout, isDarkMode = false, onToggleTheme }:
                 <span className={styles.dashboard__syncText}>{isSyncing ? 'Syncing...' : 'Sync Gmail'}</span>
               </button>
             </div>
-            <RecentEmailsList onSync={handleGmailSync} isSyncing={isSyncing} />
+            <EmailsTable />
           </div>
         );
 
