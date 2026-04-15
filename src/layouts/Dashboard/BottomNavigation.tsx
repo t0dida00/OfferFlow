@@ -34,15 +34,14 @@ export function BottomNavigation({
         const Icon = item.icon;
         // Map account to settings for active state - check for both 'account' and 'settings'
         const isActive = item.id === 'account'
-          ? (currentView === 'settings' || currentView === 'account') && !item.isAdd
-          : currentView === item.id && !item.isAdd;
-        const isAddButton = item.isAdd;
+          ? (currentView === 'settings' || currentView === 'account')
+          : currentView === item.id;
 
         return (
           <button
             key={item.id}
             onClick={() => handleItemClick(item)}
-            className={`${styles.bottomNav__item} ${isActive ? styles['bottomNav__item--active'] : ''} ${isAddButton ? styles['bottomNav__item--add'] : ''}`}
+            className={`${styles.bottomNav__item} ${isActive ? styles['bottomNav__item--active'] : ''}`}
             aria-label={item.label}
           >
             <Icon className={styles.bottomNav__icon} />
