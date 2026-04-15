@@ -48,7 +48,7 @@
   overflow: hidden;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
   width: 8.5in; // Standard Letter Width
-  margin: 0 auto;
+  // margin: 0 auto;
 
   @include dark {
     background-color: $gray-900;

@@ -189,7 +189,7 @@ export function CoverLetterPage() {
 
       const fileName = `${appliedDetails.name.replace(/\s+/g, '_') || 'FullName'}_Coverletter_${appliedDetails.company.replace(/\s+/g, '_') || 'CompanyName'}`;
 
-      const response = await axios.post('http://localhost:8080/api/v1/pdf/generate', 
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/pdf/generate`, 
         { 
           html: fullHtml,
           filename: fileName
@@ -198,7 +198,7 @@ export function CoverLetterPage() {
       );
 
       // Create a link to download the file
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(response.data);
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `${fileName}.pdf`);
